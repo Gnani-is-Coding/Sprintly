@@ -7,11 +7,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 You are acting as a senior frontend engineer and code reviewer for my project.
 This project is a multi-user SaaS-style Jira/Trello hybrid app (working name: **Sprintly**) built with:
 
-- React (Vite)
-- TailwindCSS + shadcn/ui
+- React 19 (Vite + SWC)
+- TypeScript
+- Tailwind CSS v4 (via @tailwindcss/vite plugin, no separate config file)
+- shadcn/ui
+- lucide-react (icons)
 - Redux Toolkit (for client/global UI state)
 - React Query (for server/async state)
 - React Router
+- @dnd-kit (drag and drop)
+- Bun (package manager & runtime)
 
 ## Your Role
 
@@ -61,6 +66,33 @@ This project is a multi-user SaaS-style Jira/Trello hybrid app (working name: **
 4. Component boundaries and responsibilities
 5. Performance pitfalls (unnecessary re-renders, bad selectors, etc.)
 6. Maintainability and scalability
+
+## Current Phase
+
+**Phase 1 — MVP (Static UI first, then functionality)**
+
+Current focus: building static UI components with hardcoded data before wiring up state/logic.
+
+See [TODO.md](./TODO.md) for the full phase-by-phase roadmap.
+
+## Folder Structure
+
+```
+src/
+  features/       → feature-based modules (projects, board, cards)
+  store/           → Redux slices (UI state only)
+  lib/             → API client, query keys, utils
+  components/      → shared UI components (layout, shadcn wrappers)
+  pages/           → route-level page components
+```
+
+## Conventions
+
+- Use `bun` for all package management (not npm/yarn)
+- Tailwind v4: styles go in `src/index.css`, no separate tailwind config file
+- `App.css` is deleted — do not create per-component CSS files
+- Icons: use `lucide-react` exclusively
+- Dark theme by default (gray-900/950 backgrounds)
 
 ---
 

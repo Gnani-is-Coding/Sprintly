@@ -1,53 +1,45 @@
-✅ MVP (Phase 1)
+# Sprintly
 
-Auth (fake or simple)
+A multi-user SaaS-style project management app — a Jira + Trello hybrid built for learning modern frontend architecture.
 
-Create Project
+## Tech Stack
 
-Create Board
+- **React 19** (Vite + SWC)
+- **TypeScript**
+- **Tailwind CSS v4**
+- **shadcn/ui** (component library)
+- **Redux Toolkit** (client/global UI state)
+- **React Query** (server/async state)
+- **React Router** (routing)
+- **@dnd-kit** (drag and drop)
+- **Bun** (package manager & runtime)
 
-Columns (CRUD)
+## State Management Philosophy
 
-Cards (CRUD)
+- **React Query** — all server data: projects, boards, columns, cards, users, comments
+- **Redux Toolkit** — UI-only state: modals, drawers, selected items, filters, view preferences
+- **Local state** — form inputs, inline editing toggles, dropdown open/close
 
-Move cards between columns
+Redux should **never** store fetched server data.
 
-Assign user
+## Project Structure
 
-Labels / priority
+```
+src/
+  features/       → feature-based modules (projects, board, cards)
+  store/           → Redux slices (UI state only)
+  lib/             → API client, query keys, utils
+  components/      → shared UI components (shadcn wrappers, layout)
+  pages/           → route-level page components
+```
 
-Global UI state:
+## Getting Started
 
-Open/close modals
+```bash
+bun install
+bun run dev
+```
 
-Selected card
+## Roadmap
 
-Filters
-
-🚀 Phase 2 (Redux gets juicy)
-
-Comments on cards
-
-Activity timeline
-
-Search & filters
-
-Sort by priority / date
-
-Optimistic updates
-
-Loading & error states per feature
-
-Pagination / lazy loading
-
-🧠 Phase 3 (Advanced / Optional)
-
-Drag & drop
-
-Permissions (viewer/editor)
-
-Offline-ish caching
-
-Undo / redo
-
-Bulk actions
+See [TODO.md](./TODO.md) for the full phase-by-phase plan.

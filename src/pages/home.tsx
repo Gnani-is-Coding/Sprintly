@@ -1,9 +1,13 @@
-import React from 'react'
+import RecentlyViewed from "../components/home/RecentlyViewed";
+import WorkspaceSection from "../components/home/WorkspaceSection";
 
 function Home() {
   return (
-    <div>Home</div>
-  )
+    <div className="max-w-4xl mx-auto space-y-8">
+      <RecentlyViewed />
+      <WorkspaceSection />
+    </div>
+  );
 }
 
-export default Home
+export default Home;
