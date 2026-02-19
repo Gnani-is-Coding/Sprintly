@@ -1,5 +1,6 @@
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import BottomNav from "./BottomNav";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ function Layout({ children }: LayoutProps) {
           {children}
         </main>
       </div>
+      <BottomNav />
     </div>
   );
 }

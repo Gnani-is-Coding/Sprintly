@@ -59,6 +59,7 @@ function WorkspaceSection() {
         {workspaceBoards.map((board) => (
           <BoardCard
             key={board.id}
+            id={board.id}
             title={board.title}
             bgColor={board.bgColor}
           />

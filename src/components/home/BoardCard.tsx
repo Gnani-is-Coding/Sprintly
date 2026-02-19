@@ -1,12 +1,15 @@
+import { Link } from "react-router-dom";
+
 interface BoardCardProps {
+  id: number;
   title: string;
   bgColor: string;
   isTemplate?: boolean;
 }
 
-function BoardCard({ title, bgColor, isTemplate = false }: BoardCardProps) {
+function BoardCard({ id, title, bgColor, isTemplate = false }: BoardCardProps) {
   return (
-    <div className="group cursor-pointer">
+    <Link to={`/board/${id}`} className="group cursor-pointer">
       <div
         className="relative h-24 sm:h-28 rounded-t-lg"
         style={{ background: bgColor }}
@@ -20,7 +23,7 @@ function BoardCard({ title, bgColor, isTemplate = false }: BoardCardProps) {
       <div className="rounded-b-lg bg-[#282e33] px-3 py-2 group-hover:bg-[#323940] transition-colors">
         <p className="text-sm text-gray-200 truncate">{title}</p>
       </div>
-    </div>
+    </Link>
   );
 }
 
