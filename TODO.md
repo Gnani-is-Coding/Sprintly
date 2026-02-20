@@ -1,6 +1,6 @@
 # Sprintly — Phase Plan
 
-## Frontend: 
+## Frontend:
 
 ## Phase 1 — MVP (Core Kanban)
 
@@ -12,6 +12,7 @@
 - [ ] Drag and drop Fuctionality
 - [ ] Redux slices: modal state, selected card, active filters (empty)
 - [ ] React Query setup and all data fetching/mutations
+- [ ] Generic n Global error handling.
 
 ## Phase 2 — Card Enrichment
 
