@@ -17,7 +17,6 @@ const navLinks = [
 function Sidebar() {
   return (
     <aside className="hidden lg:flex flex-col w-64 bg-[#1d2125] border-r border-[#3a3f44] h-full overflow-y-auto">
-      {/* Main nav */}
       <nav className="p-3 space-y-0.5">
         {navLinks.map(({ icon: Icon, label, active }) => (
           <button
@@ -36,11 +35,9 @@ function Sidebar() {
 
       <div className="border-t border-[#3a3f44] mx-3" />
 
-      {/* Workspaces section */}
       <div className="p-3">
         <p className="text-xs font-semibold text-gray-400 mb-2">Workspaces</p>
 
-        {/* Workspace item */}
         <div>
           <button className="flex items-center gap-2 w-full px-2 py-1.5 rounded hover:bg-[#282e33] transition-colors">
             <div className="w-6 h-6 rounded bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">

@@ -8,6 +8,8 @@ const boardsMap: Record<string, string> = {
   "2": "Testing",
 };
 
+// #TODO: to integrate with the bgColor, which we'll get from API response.
+
 function Board() {
   const { boardId } = useParams();
   const boardTitle = boardsMap[boardId ?? ""] ?? "Untitled Board";
