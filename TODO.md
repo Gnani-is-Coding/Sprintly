@@ -4,8 +4,8 @@
 
 ## Phase 1 — MVP (Core Kanban)
 
-- [x] Set up routing (projects list, board view)
-- [ ] Project CRUD (create, list, delete)
+- [x] Set up routing (Boards list, Board-Detail view)
+- [ ] Boards CRUD (create, list, delete)
 - [ ] Board-Column CRUD (create, rename, reorder, delete)
 - [ ] Column-Cards CRUD (create, edit, delete)
 - [ ] Card detail modal design
@@ -58,3 +58,4 @@
 - [ ] Undo / redo
 - [ ] User specific-Permissions (viewer/editor)
 - [ ] Performance optimizations
+- [ ] Testing cases as well using a Testing frameWorks.

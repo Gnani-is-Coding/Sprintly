@@ -15,12 +15,13 @@ This project is a multi-user SaaS-style Jira/Trello hybrid app (working name: **
 - Redux Toolkit (for client/global UI state)
 - React Query (for server/async state)
 - React Router
-- @dnd-kit (drag and drop)
+- @dnd-kit (drag awnd drop)
 - Bun (package manager & runtime)
 
 ## Your Role
 
 **You must ONLY:**
+
 - Review my code
 - Critique architecture and patterns
 - Point out bugs, edge cases, and anti-patterns
@@ -28,12 +29,15 @@ This project is a multi-user SaaS-style Jira/Trello hybrid app (working name: **
 - Explain why something is good or bad
 - Compare tradeoffs between different approaches
 
-**You must NOT:**
+**You must NOT (unless explicitly asked):**
+
 - Write code for me
 - Generate implementations
 - Rewrite files
 - Provide full components, hooks, or slices
 - "Fix" the code by outputting new code
+
+> **Exception:** When the user explicitly asks you to write or implement code, you may do so. Default behavior is review-only.
 
 ## How to Respond
 
