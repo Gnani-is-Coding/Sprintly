@@ -8,9 +8,13 @@
 - [ ] Boards CRUD (create, list, delete)
 - [ ] Board-Column CRUD (create, rename, reorder, delete)
 - [ ] Column-Cards CRUD (create, edit, delete)
-- [ ] Card detail modal design
+- [x] Card detail modal design
 - [ ] Drag and drop Fuctionality
-- [ ] Redux slices: modal state, selected card, active filters (empty)
+- [ ] Redux slices:
+  - filtersSlice — active label, assignee, priority, date filters
+  - uiSlice — view mode, card density, sidebar state
+  - selectionSlice — selected card IDs for bulk ops
+  - dragSlice - whats been dragged right now.
 - [ ] React Query setup and all data fetching/mutations
 - [ ] Generic n Global error handling.
 
@@ -49,6 +53,7 @@
 ## Phase 6 — Polish & Scale
 
 - [ ] Drag-and-drop optimistic updates (refined)
+- [ ] Drag-Drop history, fro UNDO, REDO actions.
 - [ ] Real-time sync (WebSocket/SSE)
 - [ ] Notifications
 - [ ] Bulk actions

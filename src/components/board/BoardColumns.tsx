@@ -104,7 +104,7 @@ function BoardColumns() {
 
   useEffect(() => {
     if (isAddingColumn && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus(); // This looks like imperrative .
     }
   }, [isAddingColumn]);
 
