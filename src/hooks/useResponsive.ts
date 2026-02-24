@@ -41,9 +41,13 @@ function useResponsive() {
     return () => window.removeEventListener("resize", handleScroll);
   }, []);
 
+  const isMobileDevice = currentBreakpoint.currentDevice !== Breakpoints.lg;
+
   return {
     currentWidth: currentBreakpoint.currentWidth,
     currentDevice: currentBreakpoint.currentDevice,
+    isMobileDevice,
+    isDesktopDevice: !isMobileDevice,
   };
 }
 

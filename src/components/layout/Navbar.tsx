@@ -1,16 +1,22 @@
-import {
-  LayoutGrid,
-  Search,
-  MoreHorizontal,
-  Bell,
-  CircleHelp,
-} from "lucide-react";
+import { LayoutGrid, Search, Menu, Bell, CircleHelp } from "lucide-react";
+import { useAppDispatch } from "@/hooks/app/useAppDispatch";
+import { toggleSidebar } from "@/store/slices/uiSlice";
 import CreatePopover from "../board/create-board/CreatePopover";
 
 function Navbar() {
+  const dispatch = useAppDispatch();
+
   return (
     <header className="h-12 bg-[#1d2125] border-b border-[#3a3f44] flex items-center px-3 lg:px-4 gap-2">
-      <button className="p-1.5 hover:bg-[#323940] rounded transition-colors">
+      <button
+        onClick={() => dispatch(toggleSidebar())}
+        className="p-1.5 hover:bg-[#323940] rounded transition-colors lg:hidden"
+      >
+        <Menu className="w-4 h-4 text-gray-300" />
+      </button>
+
+      {/* Grid icon — desktop only */}
+      <button className="hidden lg:block p-1.5 hover:bg-[#323940] rounded transition-colors">
         <LayoutGrid className="w-4 h-4 text-gray-300" />
       </button>
 
@@ -55,10 +61,6 @@ function Navbar() {
           G
         </div>
       </div>
-
-      <button className="p-1.5 hover:bg-[#323940] rounded transition-colors lg:hidden">
-        <MoreHorizontal className="w-4 h-4 text-gray-300" />
-      </button>
     </header>
   );
 }
