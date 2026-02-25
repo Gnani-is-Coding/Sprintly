@@ -109,7 +109,7 @@ function BoardColumns() {
   }, [isAddingColumn]);
 
   return (
-    <div className="flex-1 overflow-x-auto overflow-y-hidden p-4">
+    <div className="flex-1 overflow-x-auto overflow-y-hidden p-4 [&::-webkit-scrollbar]:hidden">
       <div className="flex items-start gap-3 h-full">
         {staticColumns.map((column) => (
           <Column key={column.id} title={column.title} cards={column.cards} />

@@ -1,5 +1,5 @@
 import { LayoutGrid, Search, Menu, Bell, CircleHelp } from "lucide-react";
-import { useAppDispatch } from "@/hooks/app/useAppDispatch";
+import { useAppDispatch } from "@/hooks/redux-store/useAppDispatch";
 import { toggleSidebar } from "@/store/slices/uiSlice";
 import CreatePopover from "../board/create-board/CreatePopover";
 

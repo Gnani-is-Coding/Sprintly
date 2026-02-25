@@ -5,7 +5,7 @@ type UiState = {
 };
 
 const initialState: UiState = {
-  isSidebarCollapsed: false,
+  isSidebarCollapsed: true,
 };
 
 const uiSlice = createSlice({
@@ -16,7 +16,7 @@ const uiSlice = createSlice({
       state.isSidebarCollapsed = !state.isSidebarCollapsed;
     },
     closeSidebar: (state) => {
-      state.isSidebarCollapsed = false; // direct state updates in here, redux toolkit uses, mimic under the hood.
+      state.isSidebarCollapsed = true; // direct state updates in here, redux toolkit uses, mimic under the hood.
     },
   },
 });

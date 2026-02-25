@@ -1,5 +1,5 @@
-import { useAppDispatch } from "@/hooks/app/useAppDispatch";
-import { useAppSelector } from "@/hooks/app/useAppSelector";
+import { useAppDispatch } from "@/hooks/redux-store/useAppDispatch";
+import { useAppSelector } from "@/hooks/redux-store/useAppSelector";
 import { toggleSidebar, closeSidebar } from "@/store/slices/uiSlice";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import SidebarContent from "./SidebarContent";
@@ -12,12 +12,13 @@ function Sidebar() {
   const dispatch = useAppDispatch();
   const { isMobileDevice } = useResponsive();
 
-  const mobileSidebar = isSidebarCollapsed ? (
+  const mobileSidebar = isSidebarCollapsed ? null : (
     <div className="fixed inset-0 z-50 lg:hidden">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60"
         onClick={() => dispatch(closeSidebar())}
+        data-component="back-drop"
       />
 
       {/* Drawer */}
@@ -42,7 +43,7 @@ function Sidebar() {
         </div>
       </aside>
     </div>
-  ) : null;
+  );
 
   const desktopSidebar = (
     <aside

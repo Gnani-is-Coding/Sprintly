@@ -17,19 +17,26 @@ interface ColumnCardProps {
 function ColumnCard({ card }: ColumnCardProps) {
   const [isChecked, setIsChecked] = useState(false);
 
+  const handleCheckboxClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // in order to prevent this click event Bubbling.
+
+    setIsChecked((prevState) => !prevState);
+  };
+
   return (
-    <div className="group/card relative">
+    <div className="group/card relative" title="column-card">
       {/* Radio toggle */}
-      <button
+      {/* <button
         onClick={() => setIsChecked(!isChecked)}
-        className="absolute -left-1 top-1/2 -translate-y-1/2 -translate-x-full p-0.5 opacity-0 group-hover/card:opacity-100 transition-opacity"
+      // className="relative  top-1/2 -translate-y-1/2 -translate-x-full p-0.5 opacity-0 group-hover/card:opacity-100 transition-opacity"
       >
         {isChecked ? (
           <CircleCheck className="w-4 h-4 text-blue-500" />
         ) : (
           <Circle className="w-4 h-4 text-gray-500 hover:text-gray-300" />
         )}
-      </button>
+      </button> */}
 
       <CardModal card={card}>
         <div
@@ -50,8 +57,20 @@ function ColumnCard({ card }: ColumnCardProps) {
             </div>
           )}
 
-          {/* Title */}
-          <p className="text-sm text-gray-200">{card.title}</p>
+          <div className="flex gap-2">
+            <button
+              onClick={(e) => handleCheckboxClick(e)}
+              className="p-0.5 lg:opacity-0 lg:group-hover/card:opacity-100 lg:transition-opacity"
+            >
+              {isChecked ? (
+                <CircleCheck className="w-4 h-4 text-blue-500" />
+              ) : (
+                <Circle className="w-4 h-4 text-gray-500 hover:text-gray-300" />
+              )}
+            </button>
+            {/* Title */}
+            <p className="text-sm text-gray-200">{card.title}</p>
+          </div>
 
           {/* Footer: metadata icons */}
           {card.commentsCount > 0 && (

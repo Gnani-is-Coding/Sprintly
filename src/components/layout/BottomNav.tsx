@@ -4,7 +4,7 @@ import { MailCheck, CalendarDays, Columns3, LayoutGrid } from "lucide-react";
 const navItems = [
   { icon: MailCheck, label: "Inbox", path: "/inbox" },
   { icon: CalendarDays, label: "Planner", path: "/planner" },
-  { icon: Columns3, label: "Board", path: "/" },
+  { icon: Columns3, label: "Board", path: "/", lgPath: "/board" },
   { icon: LayoutGrid, label: "Switch boards", path: "/switch" },
 ];
 
@@ -13,9 +13,15 @@ function BottomNav() {
   const navigate = useNavigate();
 
   return (
-    <nav className="lg:hidden flex items-center justify-around bg-[#1a1d20] border-t border-[#3a3f44] px-2 py-2">
-      {navItems.map(({ icon: Icon, label, path }) => {
-        const isActive = location.pathname === path;
+    <nav
+      className="flex items-center justify-around bg-[#1a1d20] border-t border-[#3a3f44] px-2 py-2 lg:absolute 
+    lg:bottom-4 lg:left-1/2 lg:-translate-x-1/2 lg:bg-[#101204] lg:rounded-2xl lg:shadow-2xl "
+      data-component="bottom-nav"
+    >
+      {navItems.map(({ icon: Icon, label, path, lgPath }) => {
+        const isActive =
+          location.pathname === path ||
+          (lgPath && location.pathname.startsWith(lgPath));
 
         return (
           <button
@@ -28,7 +34,9 @@ function BottomNav() {
             }`}
           >
             <Icon className="w-5 h-5" />
-            <span className="text-[10px] sm:text-xs hidden sm:inline">{label}</span>
+            <span className="text-[10px] sm:text-xs hidden sm:inline">
+              {label}
+            </span>
             {isActive && (
               <div className="absolute bottom-1.5 w-4 h-0.5 bg-blue-400 rounded-full sm:hidden" />
             )}
