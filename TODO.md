@@ -1,22 +1,28 @@
 # Sprintly — Phase Plan
 
+## Frontend:
+
 ## Phase 1 — MVP (Core Kanban)
 
-- [ ] Set up routing (projects list, board view)
-- [ ] Project CRUD (create, list, delete)
-- [ ] Board per project (1:1 for now)
-- [ ] Column CRUD (create, rename, reorder, delete)
-- [ ] Card CRUD (create, edit, delete)
-- [ ] Card detail modal/drawer (title, description)
-- [ ] Drag and drop (cards between columns, column reorder)
-- [ ] Redux slices: modal state, selected card, active filters (empty)
-- [ ] React Query: all data fetching/mutations
+- [x] Set up routing (Boards list, Board-Detail view)
+- [ ] Boards CRUD (create, list, delete)
+- [ ] Board-Column CRUD (create, rename, reorder, delete)
+- [ ] Column-Cards CRUD (create, edit, delete)
+- [x] Card detail modal design
+- [ ] Drag and drop Fuctionality
+- [ ] Redux slices:
+  - filtersSlice — active label, assignee, priority, date filters
+  - uiSlice — view mode, card density, sidebar state
+  - selectionSlice — selected card IDs for bulk ops
+  - dragSlice - whats been dragged right now.
+- [ ] React Query setup and all data fetching/mutations
+- [ ] Generic n Global error handling.
 
 ## Phase 2 — Card Enrichment
 
-- [ ] Assignee (single user, fake auth / hardcoded user)
+- [ ] Assignee 1:many for a at workspace level.
 - [ ] Labels (create, assign, color-coded)
-- [ ] Priority levels (P0–P3)
+- [ ] Priority Tags (P0–P3)
 - [ ] Due dates + overdue indicators
 - [ ] Checklists / subtasks within cards
 
@@ -31,7 +37,7 @@
 ## Phase 4 — Search, Filters & Views
 
 - [ ] Filter by assignee, label, priority, due date
-- [ ] Search across cards
+- [ ] Search across cards ( Board level search, Workspce-Project level )
 - [ ] Sort by priority / date
 - [ ] List/Table view toggle
 - [ ] Loading & error states polished per feature
@@ -47,6 +53,7 @@
 ## Phase 6 — Polish & Scale
 
 - [ ] Drag-and-drop optimistic updates (refined)
+- [ ] Drag-Drop history, fro UNDO, REDO actions.
 - [ ] Real-time sync (WebSocket/SSE)
 - [ ] Notifications
 - [ ] Bulk actions
@@ -54,5 +61,6 @@
 - [ ] Keyboard shortcuts
 - [ ] Pagination / lazy loading
 - [ ] Undo / redo
-- [ ] Permissions (viewer/editor)
-- [ ] Performance optimization pass
+- [ ] User specific-Permissions (viewer/editor)
+- [ ] Performance optimizations
+- [ ] Testing cases as well using a Testing frameWorks.
