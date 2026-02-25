@@ -26,23 +26,10 @@ function ColumnCard({ card }: ColumnCardProps) {
 
   return (
     <div className="group/card relative" title="column-card">
-      {/* Radio toggle */}
-      {/* <button
-        onClick={() => setIsChecked(!isChecked)}
-      // className="relative  top-1/2 -translate-y-1/2 -translate-x-full p-0.5 opacity-0 group-hover/card:opacity-100 transition-opacity"
-      >
-        {isChecked ? (
-          <CircleCheck className="w-4 h-4 text-blue-500" />
-        ) : (
-          <Circle className="w-4 h-4 text-gray-500 hover:text-gray-300" />
-        )}
-      </button> */}
-
       <CardModal card={card}>
         <div
           className={`bg-[#22272b] hover:bg-[#282e33] rounded-lg px-3 py-2 cursor-pointer border hover:border-[#4a5058] transition-colors shadow-sm ${isChecked ? "border-blue-500" : "border-[#3a3f44]"}`}
         >
-          {/* Labels */}
           {card.labels.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-1.5">
               {card.labels.map((label) => (
