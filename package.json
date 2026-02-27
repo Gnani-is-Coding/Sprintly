@@ -17,6 +17,7 @@
   },
   "scripts": {
     "server:local": "bun --filter @sprintly/api dev",
+    "start:local": "bun --filter @sprintly/web dev",
     "type-check": "bun --filter '*' type-check",
     "lint": "eslint .",
     "prepare": "husky"
