@@ -1,9 +1,13 @@
 import { password } from "bun";
 import DB from "./db";
 import type { Response } from "express";
-import { handleCatchBlockError, handleValidation } from "../utils";
+import {
+  CookieHelper,
+  handleCatchBlockError,
+  handleValidation,
+} from "../utils";
 import type { UserProfile } from "@sprintly/shared";
-import { generateToken } from "./generateTokens";
+import { generateToken } from "./jwtToken/generateTokens";
 
 const userRegisterService = async (userDetails: UserProfile, res: Response) => {
   try {
@@ -52,18 +56,17 @@ const userRegisterService = async (userDetails: UserProfile, res: Response) => {
       // structuredClone does the same deep-clone job but uses a proper cloning algorithm internally (no string middleman), so it handles
       // Date, Map, Set, ArrayBuffer, etc. correctly.
 
+      CookieHelper(res, refreshToken, accessToken);
       const responseDetails = JSON.parse(JSON.stringify(userDetails)); // serialization and deserialization
       delete responseDetails.password;
 
       res.send({
         data: responseDetails,
         status: "Successfully Done !!",
-        accessToken,
-        refreshToken,
       });
     }
   } catch (err: unknown) {
-    handleCatchBlockError(err, res);
+    handleCatchBlockError(err, res, "UserRegistration-Service");
   }
 };
 

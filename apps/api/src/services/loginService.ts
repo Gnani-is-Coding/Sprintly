@@ -1,8 +1,12 @@
 import type { Response } from "express";
-import { handleCatchBlockError, handleValidation } from "../utils";
+import {
+  CookieHelper,
+  handleCatchBlockError,
+  handleValidation,
+} from "../utils";
 import DB from "./db";
 import { password } from "bun";
-import { generateToken } from "./generateTokens";
+import { generateToken } from "./jwtToken/generateTokens";
 
 type ILoginType = {
   userName: string;
@@ -39,11 +43,15 @@ export const loginservice = async (loginPayload: ILoginType, res: Response) => {
       const { refreshToken, accessToken } = generateToken("BOTH", {
         userName: loginPayload.userName,
       });
-      res.send({ data: "Successfully Logged in !", accessToken, refreshToken });
+      CookieHelper(res, refreshToken, accessToken);
+      res.send({ data: "Successfully Logged in !" });
     } else {
       res.status(401).send({ data: "incorrect password" });
     }
   } catch (err) {
-    handleCatchBlockError(err, res);
+    handleCatchBlockError(err, res, "Login-service");
   }
 };
+
+// Takes care of Bussiness Logic in here.
+// Pure business logic. Framework-agnostic — no req, no res, no Express anywhere.

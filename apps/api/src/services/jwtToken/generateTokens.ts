@@ -1,14 +1,14 @@
 import jwt from "jsonwebtoken";
 
-enum TOKENS {
+export enum TOKENS {
   ACCESS = "ACCESS",
   REFRESH = "REFRESH",
   BOTH = "BOTH",
 }
 
-type tokenType = keyof typeof TOKENS;
+export type tokenType = keyof typeof TOKENS;
 
-const PRIVATEKEY = process.env.PRIVATE_KEY;
+const PRIVATEKEY = process.env.PRIVATE_KEY || "Testing";
 
 const handleGenToken = (
   type: tokenType,
@@ -16,12 +16,13 @@ const handleGenToken = (
   expiryTime: number,
 ) => {
   // generates token in here.
+  // #TODO: add more user details n type in here.
   return jwt.sign(payload, PRIVATEKEY, { expiresIn: expiryTime });
 };
 
 // type fncReturnType = {};
 
-const expiryTimeEnum = {
+export const expiryTimeEnum = {
   [TOKENS.REFRESH]: 7 * 24 * 3600, // 7 days
   [TOKENS.ACCESS]: 15 * 60, // 15 mins only.
 };
@@ -54,3 +55,8 @@ export const generateToken = (
       };
   }
 };
+
+// export const genRefreshToken = (paylaod: UserProfile) => {
+//     const
+
+// }
