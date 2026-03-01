@@ -1,15 +1,18 @@
-import type { UserProfile } from "../types";
+import type { UserProfile } from "@sprintly/shared";
 
 type setReturnType = {
   status: boolean;
 };
+
+// static variables are constant everywhere, even across the instances.
 
 class DB {
   static row: UserProfile[] = [
     // can also use a MAP, if data is huge,
     {
       userName: "Gnani",
-      password: "#123",
+      password:
+        "$argon2id$v=19$m=65536,t=2,p=1$hXiFqxHd4rcw6BB5YjnFUdCJvID9xRPmU5TFQvoXUms$pCMxrucchaX498kn3frOiX2zSwTFzGUFEDgC2REnKsM",
       fullName: "Gnanendra Gariminti",
     },
   ];

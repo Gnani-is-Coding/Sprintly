@@ -13,15 +13,16 @@ export const handleCatchBlockError = (err: unknown, res: Response) => {
 export const handleValidation = <T extends Record<string, unknown>>(
   payload: T | undefined | null,
   res: Response,
-  reqFeilds?: (keyof T)[],
+  reqFields?: (keyof T)[],
   customErrMsg?: string,
 ): { success: boolean } => {
   if (!payload || Object.keys(payload).length === 0) {
     res.status(400).send({ data: customErrMsg ?? "Invalid Payload" });
     return { success: false };
   }
-  if (reqFeilds && reqFeilds.length > 0) {
-    for (const field of reqFeilds) {
+
+  if (reqFields && reqFields.length > 0) {
+    for (const field of reqFields) {
       if (!payload[field]) {
         res
           .status(400)
@@ -29,7 +30,7 @@ export const handleValidation = <T extends Record<string, unknown>>(
 
         return { success: false };
       }
-    };
+    }
   }
 
   return { success: true };

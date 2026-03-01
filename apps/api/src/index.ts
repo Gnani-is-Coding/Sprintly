@@ -5,10 +5,10 @@ const app = express();
 
 const PORT = process.env.PORT || 8080;
 
-app.use(express.json()) // to parse JSON payloads
+app.use(express.json()); // to parse JSON payloads
 // app.use() // #TODO: CORS setup.
 
-
+//routes
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 
@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log("Listenning surrently to port", PORT);
+  console.log("Listenning to port", PORT);
 });
 
 export default app;

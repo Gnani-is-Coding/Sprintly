@@ -1,15 +1,22 @@
 import { password } from "bun";
-import type { UserProfile } from "../types";
 import DB from "./db";
 import type { Response } from "express";
 import { handleCatchBlockError, handleValidation } from "../utils";
+import type { UserProfile } from "@sprintly/shared";
+import { generateToken } from "./generateTokens";
 
 const userRegisterService = async (userDetails: UserProfile, res: Response) => {
   try {
-    handleValidation(userDetails, res, ["userName", "fullName", "password"]);
+    const { success: isUserDetailsValid } = handleValidation(userDetails, res, [
+      "userName",
+      "fullName",
+      "password",
+    ]);
+
+    if (!isUserDetailsValid) return;
 
     const { password: inputPasswrd, userName } = userDetails;
-    const storedUser = DB.get(userName); // make sure our usernames are unique.
+    const storedUser = DB.get(userName); // make sure our "usernames" are unique.
 
     if (storedUser) {
       return res
@@ -21,19 +28,39 @@ const userRegisterService = async (userDetails: UserProfile, res: Response) => {
 
     const response = DB.set({ ...userDetails, password: hashedPassword });
     console.log("Saved in DB");
+    console.log(hashedPassword, "hashedPassword");
 
     if (response.status) {
       // deep copy
       // JSON.parse(JSON.stringify(userDetails))
-      // structuredClone(userDetails);
+      // inbuilt-method structuredClone(userDetails);
 
-      // #TODO: Token generation logic.
-      const responseDetails = JSON.parse(JSON.stringify(userDetails));
+      const { accessToken, refreshToken } = generateToken("BOTH", {
+        userName: userDetails.userName,
+      });
+
+      //But this is lossy:
+      // Because JSON (the format) only supports strings, numbers, booleans, arrays, objects, and null. Anything else gets mangled or
+      // dropped during the stringify step:
+
+      // - undefined → silently dropped
+      // - Date objects → become strings ("2026-03-01T...") and stay strings after parse
+      // - Map, Set → become {}
+      // - Functions → dropped entirely
+      // - NaN, Infinity → become null
+
+      // structuredClone does the same deep-clone job but uses a proper cloning algorithm internally (no string middleman), so it handles
+      // Date, Map, Set, ArrayBuffer, etc. correctly.
+
+      const responseDetails = JSON.parse(JSON.stringify(userDetails)); // serialization and deserialization
       delete responseDetails.password;
 
-      res
-        .status(200)
-        .send({ data: responseDetails, status: "Successfully Done !!" });
+      res.send({
+        data: responseDetails,
+        status: "Successfully Done !!",
+        accessToken,
+        refreshToken,
+      });
     }
   } catch (err: unknown) {
     handleCatchBlockError(err, res);
