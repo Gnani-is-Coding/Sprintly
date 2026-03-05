@@ -1,6 +1,6 @@
 import type { UserProfile } from "@sprintly/shared";
 
-type setReturnType = {
+type ReturnType = {
   status: boolean;
 };
 
@@ -14,6 +14,7 @@ class DB {
       password:
         "$argon2id$v=19$m=65536,t=2,p=1$hXiFqxHd4rcw6BB5YjnFUdCJvID9xRPmU5TFQvoXUms$pCMxrucchaX498kn3frOiX2zSwTFzGUFEDgC2REnKsM",
       fullName: "Gnanendra Gariminti",
+      refreshToken: "Testing",
     },
   ];
 
@@ -21,9 +22,24 @@ class DB {
     return this.row.find((obj) => obj.userName === userName);
   }
 
-  static set(userDetails: UserProfile): setReturnType {
+  static set(userDetails: UserProfile): ReturnType {
     this.row.push(userDetails);
     return { status: true };
+  }
+
+  static put(userDetails: UserProfile): ReturnType {
+    let success = false;
+    const updatedRows = this.row.map((obj) => {
+      if (obj.userName === userDetails.userName) {
+        success = true;
+        return { ...obj, ...userDetails };
+      }
+      return obj;
+    });
+
+    this.row = updatedRows;
+
+    return { status: success };
   }
 
   static getAllItems(): UserProfile[] {

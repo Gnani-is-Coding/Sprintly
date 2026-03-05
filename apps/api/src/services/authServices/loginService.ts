@@ -3,10 +3,10 @@ import {
   CookieHelper,
   handleCatchBlockError,
   handleValidation,
-} from "../utils";
-import DB from "./db";
+} from "../../utils";
+import DB from "../db";
 import { password } from "bun";
-import { generateToken } from "./jwtToken/generateTokens";
+import { generateToken } from "../jwtToken/generateTokens";
 
 type ILoginType = {
   userName: string;
@@ -43,7 +43,11 @@ export const loginservice = async (loginPayload: ILoginType, res: Response) => {
       const { refreshToken, accessToken } = generateToken("BOTH", {
         userName: loginPayload.userName,
       });
+
+      // Store in DB n set in cookies.
+      DB.put({ ...dbResponse!, refreshToken: refreshToken });
       CookieHelper(res, refreshToken, accessToken);
+
       res.send({ data: "Successfully Logged in !" });
     } else {
       res.status(401).send({ data: "incorrect password" });

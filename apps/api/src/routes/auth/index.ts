@@ -1,9 +1,10 @@
 import express from "express";
-import userRegisterService from "../../services/userRegisterService";
-import { loginservice } from "../../services/loginService";
+import userRegisterService from "../../services/authServices/userRegisterService";
+import { loginservice } from "../../services/authServices/loginService";
 import { handleCatchBlockError } from "../../utils";
 import tokenRotationMiddleware from "../../middlewares/tokenRotationMiddleware";
-import tokenRotationService from "../../services/tokenRotationService";
+import tokenRotationService from "../../services/authServices/tokenRotationService";
+import { logoutService } from "../../services/authServices/logoutService";
 
 // Route definitions only. Maps HTTP methods + paths to controller functions.
 
@@ -24,6 +25,10 @@ authRouter.post("/refresh", tokenRotationMiddleware, (req, res) => {
   } catch (err) {
     handleCatchBlockError(err, res, "Refresh-API-Router");
   }
+});
+
+authRouter.post("/logout", (req, res) => {
+  logoutService(req, res);
 });
 
 export default authRouter;

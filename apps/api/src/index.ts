@@ -13,7 +13,7 @@ app.use(cookieParser()); // to parse req.cookies
 
 //routes
 app.use("/auth", authRouter);
-app.use("/users", userRouter);
+app.use("/users", authorise, userRouter);
 
 app.get("/", authorise, (req, res) => {
   res.send("Hello Gnani here !!");

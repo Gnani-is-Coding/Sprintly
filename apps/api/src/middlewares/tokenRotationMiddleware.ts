@@ -1,12 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
-import { extractPayloadFromTokens } from "./utils";
+import { verifyTokensAndExtractPayload } from "./utils";
 
 const tokenRotationMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const { success } = extractPayloadFromTokens(req, res, true);
+  const { success } = verifyTokensAndExtractPayload(req, res, true);
 
   if (success) {
     next();

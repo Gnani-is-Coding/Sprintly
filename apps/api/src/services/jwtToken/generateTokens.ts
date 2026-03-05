@@ -24,7 +24,7 @@ const handleGenToken = (
 
 export const expiryTimeEnum = {
   [TOKENS.REFRESH]: 7 * 24 * 3600, // 7 days
-  [TOKENS.ACCESS]: 15 * 60, // 15 mins only.
+  [TOKENS.ACCESS]: 15 * 60, // 15 mins session.
 };
 
 export const generateToken = (

@@ -1,10 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
-import { extractPayloadFromTokens } from "./utils";
+import { verifyTokensAndExtractPayload } from "./utils";
 import { handleCatchBlockError } from "../utils";
 
 function authorise(req: Request, res: Response, next: NextFunction) {
   try {
-    const { success } = extractPayloadFromTokens(req, res);
+    const { success } = verifyTokensAndExtractPayload(req, res);
+    // Check if the token is expired or active .
+    // Browsers wont attach the expired cookies by default.
 
     if (success) {
       next();

@@ -1,13 +1,13 @@
 import { password } from "bun";
-import DB from "./db";
+import DB from "../db";
 import type { Response } from "express";
 import {
   CookieHelper,
   handleCatchBlockError,
   handleValidation,
-} from "../utils";
+} from "../../utils";
 import type { UserProfile } from "@sprintly/shared";
-import { generateToken } from "./jwtToken/generateTokens";
+import { generateToken } from "../jwtToken/generateTokens";
 
 const userRegisterService = async (userDetails: UserProfile, res: Response) => {
   try {
