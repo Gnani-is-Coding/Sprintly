@@ -4,6 +4,8 @@ import {
   TOKENS,
   type tokenType,
 } from "./services/jwtToken/generateTokens";
+import z from "zod";
+import { ZodError } from "zod";
 
 export const handleCatchBlockError = (
   err: unknown,
@@ -14,38 +16,29 @@ export const handleCatchBlockError = (
     err instanceof Error
       ? `${path} ::: ${err.message}`
       : `${path} ::: Unkown Error`;
-  console.log("Error occured", message);
+  console.error("Error occured", message);
   res.status(500).send({ message });
 };
 
-// why <T> sits outside/before the parentheses ? — it's the declaration site.
+// why <G> sits outside/before the parentheses ? — it's the declaration site.
 // 1. Declare the type variable → <T extends Record<string, unknown>>
-// 2. Use it in the parameters → (payload: T | undefined | null, res: Response)
 
-export const handleValidation = <T extends Record<string, unknown>>(
-  payload: T | undefined | null,
+export const requestValidator = <G extends z.ZodTypeAny>( // Means whatever zod-schema we pass
+  sourceSchema: G,
+  payload: unknown, // input is untrusted, no need of a type in here.
   res: Response,
-  reqFields?: (keyof T)[],
-  customErrMsg?: string,
-): { success: boolean } => {
-  if (!payload || Object.keys(payload).length === 0) {
-    res.status(400).send({ data: customErrMsg ?? "Invalid Payload" });
-    return { success: false };
-  }
-
-  if (reqFields && reqFields.length > 0) {
-    for (const field of reqFields) {
-      if (!payload[field]) {
-        res
-          .status(400)
-          .send({ data: `${String(field)} is missing in payload` });
-
-        return { success: false };
-      }
+): { status: true; value: z.infer<G> } | { status: false } => {
+  try {
+    const value = sourceSchema.parse(payload);
+    return { status: true, value: value };
+  } catch (err) {
+    if (err instanceof ZodError) {
+      res.status(400).send({ data: `${z.treeifyError(err)}` });
+    } else {
+      res.status(500).send({ data: "Error occured" });
     }
+    return { status: false };
   }
-
-  return { success: true };
 };
 
 // Access token cookie with path: "/" — the browser sends it on every request to your backend (/users, /auth/anything, /projects, etc.).
@@ -61,10 +54,11 @@ const cookieOptions = (type: Exclude<tokenType, "BOTH">): CookieOptions => {
     secure: !!process.env.SECURE,
     sameSite: (process.env.SAME_SITE as CookieOptions["sameSite"]) || "none",
     maxAge: expiryTimeEnum[type] * 1000, // in millis
-    path: isRefreshtoken ? "/auth/refresh" : "/", // path controls which routes the browser attaches the cookie to.
+    path: isRefreshtoken ? "/v1/auth/refresh" : "/", // path controls which routes the browser attaches the cookie to.
   };
 };
 
+// Sets Cookies in Response Object.
 export const CookieHelper = (
   res: Response,
   refreshToken?: string,
@@ -79,6 +73,7 @@ export const CookieHelper = (
     if (accessToken) {
       res.cookie("accessToken", accessToken, cookieOptions("ACCESS"));
     }
+
     return { success: true };
   } catch (err) {
     handleCatchBlockError(err, res, " At Cookie Helper");

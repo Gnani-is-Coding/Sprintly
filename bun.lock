@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "sprintly",
+      "dependencies": {
+        "zod": "^4.3.6",
+      },
       "devDependencies": {
         "@eslint/js": "^9.39.1",
         "@types/bun": "latest",

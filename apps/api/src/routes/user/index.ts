@@ -10,7 +10,7 @@ userRouter.get("/", (_, res) => {
 });
 
 userRouter.post("/me", (req, res) => {
-  const userDetails = DB.get(req.body.userName);
+  const userDetails = DB.get(req.body.email);
   if (userDetails) {
     res.send({ data: userDetails });
   } else {

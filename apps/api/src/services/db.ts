@@ -1,4 +1,4 @@
-import type { UserProfile } from "@sprintly/shared";
+import type { UserProfile } from "@sprintly/shared/schemas";
 
 type ReturnType = {
   status: boolean;
@@ -10,16 +10,16 @@ class DB {
   static row: UserProfile[] = [
     // can also use a MAP, if data is huge,
     {
-      userName: "Gnani",
+      email: "Gnani@gmail.com",
       password:
         "$argon2id$v=19$m=65536,t=2,p=1$hXiFqxHd4rcw6BB5YjnFUdCJvID9xRPmU5TFQvoXUms$pCMxrucchaX498kn3frOiX2zSwTFzGUFEDgC2REnKsM",
-      fullName: "Gnanendra Gariminti",
+      name: "Gnanendra Gariminti",
       refreshToken: "Testing",
     },
   ];
 
-  static get(userName: string): UserProfile | undefined {
-    return this.row.find((obj) => obj.userName === userName);
+  static get(email: string): UserProfile | undefined {
+    return this.row.find((obj) => obj.email === email);
   }
 
   static set(userDetails: UserProfile): ReturnType {
@@ -30,7 +30,7 @@ class DB {
   static put(userDetails: UserProfile): ReturnType {
     let success = false;
     const updatedRows = this.row.map((obj) => {
-      if (obj.userName === userDetails.userName) {
+      if (obj.email === userDetails.email) {
         success = true;
         return { ...obj, ...userDetails };
       }

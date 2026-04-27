@@ -9,22 +9,19 @@ export const verifyTokensAndExtractPayload = (
 ): { success: boolean } => {
   try {
     const forbiddenResponse = () => {
-      res.status(401).send({ data: "Invalid Cookies, Login again !!" });
+      res.status(401).send({ data: "Unauthorized, Login again !!" });
       return { success: false };
     };
 
     const { refreshToken, accessToken } = req.cookies;
 
-    if (isRotationFlow && !refreshToken) {
-      return forbiddenResponse();
+    if (isRotationFlow) {
+      if (!refreshToken) return forbiddenResponse();
+    } else {
+      if (!accessToken) return forbiddenResponse();
     }
 
-    if (!isRotationFlow && !accessToken) {
-      // is there a need to check refresh Token as well in here ???
-      return forbiddenResponse();
-    }
-
-    const PRIVATEKEY = process.env.PRIVATE_KEY || "testing";
+    const PRIVATEKEY = process.env.PRIVATE_KEY!;
 
     const payload = jwt.verify(
       isRotationFlow ? refreshToken : accessToken,
@@ -32,7 +29,9 @@ export const verifyTokensAndExtractPayload = (
     );
 
     console.log(payload, "payload");
-    const userDetails = { userName: payload.userName }; // #TODO: enhance this, with more User details in here.
+
+    // @ts-expect-error #TODO: enhance this, with more User details in here.
+    const userDetails = { email: payload.email };
     req.body = { ...req.body, ...userDetails };
     console.log("Added Payload to Req");
 

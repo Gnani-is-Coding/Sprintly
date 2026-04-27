@@ -4,23 +4,21 @@ import type { Response } from "express";
 import {
   CookieHelper,
   handleCatchBlockError,
-  handleValidation,
+  requestValidator,
 } from "../../utils";
-import type { UserProfile } from "@sprintly/shared";
 import { generateToken } from "../jwtToken/generateTokens";
+import { registerSchema } from "@sprintly/shared/schemas";
 
-const userRegisterService = async (userDetails: UserProfile, res: Response) => {
+const userRegisterService = async (useDetails: unknown, res: Response) => {
   try {
-    const { success: isUserDetailsValid } = handleValidation(userDetails, res, [
-      "userName",
-      "fullName",
-      "password",
-    ]);
+    const r = requestValidator(registerSchema, useDetails, res);
 
-    if (!isUserDetailsValid) return;
+    if (!r.status) return;
 
-    const { password: inputPasswrd, userName } = userDetails;
-    const storedUser = DB.get(userName); // make sure our "usernames" are unique.
+    const { value: structuredUserDetails } = r;
+
+    const { password: inputPasswrd, email } = structuredUserDetails;
+    const storedUser = DB.get(email); // make sure our "emails" are unique.
 
     if (storedUser) {
       return res
@@ -30,17 +28,20 @@ const userRegisterService = async (userDetails: UserProfile, res: Response) => {
 
     const hashedPassword = await password.hash(inputPasswrd);
 
-    const response = DB.set({ ...userDetails, password: hashedPassword });
+    const response = DB.set({
+      ...structuredUserDetails,
+      password: hashedPassword,
+    });
     console.log("Saved in DB");
     console.log(hashedPassword, "hashedPassword");
 
     if (response.status) {
       // deep copy
-      // JSON.parse(JSON.stringify(userDetails))
-      // inbuilt-method structuredClone(userDetails);
+      // JSON.parse(JSON.stringify(structuredUserDetails))
+      // inbuilt-method structuredClone(structuredUserDetails);
 
       const { accessToken, refreshToken } = generateToken("BOTH", {
-        userName: userDetails.userName,
+        email: structuredUserDetails!.email,
       });
 
       //But this is lossy:
@@ -57,7 +58,7 @@ const userRegisterService = async (userDetails: UserProfile, res: Response) => {
       // Date, Map, Set, ArrayBuffer, etc. correctly.
 
       CookieHelper(res, refreshToken, accessToken);
-      const responseDetails = JSON.parse(JSON.stringify(userDetails)); // serialization and deserialization
+      const responseDetails = JSON.parse(JSON.stringify(structuredUserDetails)); // serialization and deserialization
       delete responseDetails.password;
 
       res.send({

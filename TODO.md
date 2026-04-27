@@ -6,14 +6,14 @@
 
 ### Auth System
 
-- [x] `POST /auth/register` — validate input (Zod), check duplicate email, hash password (bcrypt), create user, return access token + set refresh token cookie
+- [x] `POST /auth/register` — validate input (Zod), check duplicate email, hash password (bcrypt/bun), create user, return access token + set refresh token cookie
 - [x] `POST /auth/login` — validate input (Zod), lookup user, compare password hash, return access token + set refresh token cookie
-- [ ] `POST /auth/refresh` — validate refresh token from httpOnly cookie, issue new access token (+ rotate refresh token)
-- [ ] `POST /auth/logout` — clear refresh token cookie, invalidate refresh token in DB
+- [x] `POST /auth/refresh` — validate refresh token from httpOnly cookie, issue new access token (+ rotate refresh token)
+- [x] `POST /auth/logout` — clear refresh token cookie, invalidate refresh token in DB
 - [ ] `GET /auth/me` — return current user profile from access token (for page refresh hydration)
-- [ ] Auth middleware — verify access token on protected routes, attach `req.user`
+- [x] Auth middleware — verify access token on protected routes, attach `req.user`
 - [ ] Refresh token storage in DB (so tokens can be revoked per-user or per-session)
-- [ ] Refresh token rotation — issue new refresh token on each refresh, invalidate the old one
+- [x] Refresh token rotation — issue new refresh token on each refresh, invalidate the old one
 
 ### Security
 

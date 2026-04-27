@@ -11,11 +11,9 @@ export type tokenType = keyof typeof TOKENS;
 const PRIVATEKEY = process.env.PRIVATE_KEY || "Testing";
 
 const handleGenToken = (
-  type: tokenType,
   payload: Record<string, unknown>,
   expiryTime: number,
 ) => {
-  // generates token in here.
   // #TODO: add more user details n type in here.
   return jwt.sign(payload, PRIVATEKEY, { expiresIn: expiryTime });
 };
@@ -32,26 +30,18 @@ export const generateToken = (
   payload: Record<string, unknown>,
 ) => {
   switch (type) {
-    case "ACCESS":
+    case TOKENS.ACCESS:
       return {
-        accessToken: handleGenToken("ACCESS", payload, expiryTimeEnum[type]),
+        accessToken: handleGenToken(payload, expiryTimeEnum[type]),
       };
-    case "REFRESH":
+    case TOKENS.REFRESH:
       return {
-        refreshToken: handleGenToken("REFRESH", payload, expiryTimeEnum[type]),
+        refreshToken: handleGenToken(payload, expiryTimeEnum[type]),
       };
     default:
       return {
-        accessToken: handleGenToken(
-          "BOTH",
-          payload,
-          expiryTimeEnum[TOKENS.ACCESS],
-        ),
-        refreshToken: handleGenToken(
-          "BOTH",
-          payload,
-          expiryTimeEnum[TOKENS.REFRESH],
-        ),
+        accessToken: handleGenToken(payload, expiryTimeEnum[TOKENS.ACCESS]),
+        refreshToken: handleGenToken(payload, expiryTimeEnum[TOKENS.REFRESH]),
       };
   }
 };

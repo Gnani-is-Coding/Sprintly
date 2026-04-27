@@ -1,6 +1,6 @@
 export type UserProfile = {
-  userName: string;
-  fullName: string;
+  name: string;
+  email: string;
   password: string;
   refreshToken?: string;
 };
