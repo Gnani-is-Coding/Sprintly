@@ -5,27 +5,33 @@ import { handleCatchBlockError } from "../../utils";
 import tokenRotationMiddleware from "../../middlewares/tokenRotationMiddleware";
 import tokenRotationService from "../../services/authServices/tokenRotationService";
 import { logoutService } from "../../services/authServices/logoutService";
+import { authLimiter } from "../../middlewares/rateLimiter/authLimiter";
 
 // Route definitions only. Maps HTTP methods + paths to controller functions.
 
 const authRouter = express.Router();
 
-authRouter.post("/register", async (req, res) => {
+authRouter.post("/register", authLimiter, async (req, res) => {
   await userRegisterService(req.body, res);
 });
 
-authRouter.post("/login", async (req, res) => {
+authRouter.post("/login", authLimiter, async (req, res) => {
   await loginservice(req.body, res);
 });
 
-authRouter.post("/refresh", tokenRotationMiddleware, (req, res) => {
-  try {
-    // token rotation
-    tokenRotationService(req, res);
-  } catch (err) {
-    handleCatchBlockError(err, res, "Refresh-API-Router");
-  }
-});
+authRouter.post(
+  "/refresh",
+  authLimiter,
+  tokenRotationMiddleware,
+  (req, res) => {
+    try {
+      // token rotation
+      tokenRotationService(req, res);
+    } catch (err) {
+      handleCatchBlockError(err, res, "Refresh-API-Router");
+    }
+  },
+);
 
 authRouter.post("/logout", (req, res) => {
   logoutService(req, res);
