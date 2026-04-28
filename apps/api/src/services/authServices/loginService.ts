@@ -41,13 +41,18 @@ export const loginservice = async (loginPayload: ILoginType, res: Response) => {
     );
 
     if (isPsswdMatch) {
-      const { refreshToken, accessToken } = generateToken("BOTH", {
+      const { refreshToken, accessToken, csrfToken } = generateToken("ALL", {
         email: dbResponsestructured!.email,
       });
 
+      console.log(
+        { refreshToken, accessToken, csrfToken },
+        "{ refreshToken, accessToken, csrfToken }",
+      );
+
       // Store in DB n set in cookies.
       DB.put({ ...dbResponsestructured!, refreshToken: refreshToken });
-      CookieHelper(res, refreshToken, accessToken);
+      CookieHelper(res, refreshToken, accessToken, csrfToken);
 
       res.send({ data: "Successfully Logged in !" });
     } else {

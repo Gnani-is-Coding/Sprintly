@@ -49,11 +49,12 @@ export const requestValidator = <G extends z.ZodTypeAny>( // Means whatever zod-
 // Refresh token cookie with path: "/auth/refresh" — the browser only sends it when hitting /auth/refresh. A request to /users or
 // /projects won't carry the refresh token.
 
-const cookieOptions = (type: Exclude<tokenType, "BOTH">): CookieOptions => {
+const cookieOptions = (type: Exclude<tokenType, "ALL">): CookieOptions => {
   const isRefreshtoken = type === TOKENS.REFRESH;
+  const isCSRFToken = type === TOKENS.CSRF;
 
   return {
-    httpOnly: !!process.env.HTTP_ONLY,
+    httpOnly: isCSRFToken ? false : !!process.env.HTTP_ONLY,
     secure: !!process.env.SECURE,
     sameSite: (process.env.SAME_SITE as CookieOptions["sameSite"]) || "none",
     maxAge: expiryTimeEnum[type] * 1000, // in millis
@@ -66,6 +67,7 @@ export const CookieHelper = (
   res: Response,
   refreshToken?: string,
   accessToken?: string,
+  csrfToken?: string,
 ): { success: boolean } => {
   try {
     console.log("Setting Cookies in res");
@@ -75,6 +77,10 @@ export const CookieHelper = (
 
     if (accessToken) {
       res.cookie("accessToken", accessToken, cookieOptions("ACCESS"));
+    }
+
+    if (csrfToken) {
+      res.cookie("csrfToken", csrfToken, cookieOptions("CSRF"));
     }
 
     return { success: true };

@@ -6,6 +6,7 @@ import tokenRotationMiddleware from "../../middlewares/tokenRotationMiddleware";
 import tokenRotationService from "../../services/authServices/tokenRotationService";
 import { logoutService } from "../../services/authServices/logoutService";
 import { authLimiter } from "../../middlewares/rateLimiter/authLimiter";
+import { csrfMiddleware } from "../../middlewares/csrf";
 
 // Route definitions only. Maps HTTP methods + paths to controller functions.
 
@@ -21,6 +22,7 @@ authRouter.post("/login", authLimiter, async (req, res) => {
 
 authRouter.post(
   "/refresh",
+  csrfMiddleware,
   authLimiter,
   tokenRotationMiddleware,
   (req, res) => {

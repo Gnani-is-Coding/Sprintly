@@ -40,7 +40,7 @@ const userRegisterService = async (useDetails: unknown, res: Response) => {
       // JSON.parse(JSON.stringify(structuredUserDetails))
       // inbuilt-method structuredClone(structuredUserDetails);
 
-      const { accessToken, refreshToken } = generateToken("BOTH", {
+      const { accessToken, refreshToken, csrfToken } = generateToken("ALL", {
         email: structuredUserDetails!.email,
       });
 
@@ -57,7 +57,7 @@ const userRegisterService = async (useDetails: unknown, res: Response) => {
       // structuredClone does the same deep-clone job but uses a proper cloning algorithm internally (no string middleman), so it handles
       // Date, Map, Set, ArrayBuffer, etc. correctly.
 
-      CookieHelper(res, refreshToken, accessToken);
+      CookieHelper(res, refreshToken, accessToken, csrfToken);
       const responseDetails = JSON.parse(JSON.stringify(structuredUserDetails)); // serialization and deserialization
       delete responseDetails.password;
 

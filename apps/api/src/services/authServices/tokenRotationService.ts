@@ -18,12 +18,11 @@ const tokenRotationService = (req: Request, res: Response) => {
     return res.status(400).send({ data: "Not an Existing User, Register !" });
   }
 
-  console.log("before token generation", payload);
-
-  const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-    generateToken("BOTH", existingUserDetails);
-
-  console.log("After token generation");
+  const {
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+    csrfToken,
+  } = generateToken("ALL", existingUserDetails);
 
   const updatedPayload = {
     ...structuredClone(existingUserDetails),
@@ -33,7 +32,12 @@ const tokenRotationService = (req: Request, res: Response) => {
   DB.put(updatedPayload); // Update in DB as well.
 
   // set tokens in Cookies.
-  const { success } = CookieHelper(res, newRefreshToken, newAccessToken);
+  const { success } = CookieHelper(
+    res,
+    newRefreshToken,
+    newAccessToken,
+    csrfToken,
+  );
 
   console.log(res.getHeaders()["set-cookie"], "cookie :::");
   if (success) {

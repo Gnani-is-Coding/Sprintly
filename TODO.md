@@ -103,3 +103,5 @@
 - [ ] User specific-Permissions (viewer/editor)
 - [ ] Performance optimizations
 - [ ] Testing cases as well using a Testing frameWorks.
+
+- [ ] Init Logging setup as well.

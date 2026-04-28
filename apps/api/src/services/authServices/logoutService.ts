@@ -6,7 +6,7 @@ export const logoutService = (req: Request, res: Response) => {
 
   try {
     console.log(req.cookies, "Cookies from REQ");
-    const { refreshToken, accessToken } = req.cookies;
+    const { refreshToken, accessToken, csrfToken } = req.cookies;
 
     if (refreshToken) {
       console.log("Clearing refreshToken");
@@ -15,6 +15,11 @@ export const logoutService = (req: Request, res: Response) => {
     if (accessToken) {
       console.log("Clearing accessToken");
       res.clearCookie("accessToken");
+    }
+
+    if (csrfToken) {
+      console.log("Clearing accessToken");
+      res.clearCookie("csrfToken");
     }
 
     res.send({ data: "Suceefully Done !!!" });

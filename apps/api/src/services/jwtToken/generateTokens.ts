@@ -4,7 +4,8 @@ import type { TokenPayload } from "@sprintly/shared/schemas";
 export enum TOKENS {
   ACCESS = "ACCESS",
   REFRESH = "REFRESH",
-  BOTH = "BOTH",
+  CSRF = "CSRF",
+  ALL = "ALL",
 }
 
 export type tokenType = keyof typeof TOKENS;
@@ -20,23 +21,29 @@ const handleGenToken = (payload: TokenPayload, expiryTime: number) => {
 
 export const expiryTimeEnum = {
   [TOKENS.REFRESH]: 7 * 24 * 3600, // 7 days
+  [TOKENS.CSRF]: 7 * 24 * 3600,
   [TOKENS.ACCESS]: 15 * 60, // 15 mins session.
+};
+
+const tokenKeys = {
+  [TOKENS.REFRESH]: "refreshtoken",
+  [TOKENS.CSRF]: "csrfToken",
+  [TOKENS.ACCESS]: "accessToken",
 };
 
 export const generateToken = (type: tokenType, payload: TokenPayload) => {
   switch (type) {
     case TOKENS.ACCESS:
-      return {
-        accessToken: handleGenToken(payload, expiryTimeEnum[type]),
-      };
     case TOKENS.REFRESH:
+    case TOKENS.CSRF:
       return {
-        refreshToken: handleGenToken(payload, expiryTimeEnum[type]),
+        [tokenKeys[type]]: handleGenToken(payload, expiryTimeEnum[type]),
       };
     default:
       return {
         accessToken: handleGenToken(payload, expiryTimeEnum[TOKENS.ACCESS]),
         refreshToken: handleGenToken(payload, expiryTimeEnum[TOKENS.REFRESH]),
+        csrfToken: handleGenToken(payload, expiryTimeEnum[TOKENS.CSRF]),
       };
   }
 };
