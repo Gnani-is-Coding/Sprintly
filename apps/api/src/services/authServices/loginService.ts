@@ -13,6 +13,7 @@ type ILoginType = {
   email: string;
   password: string;
 };
+
 export const loginservice = async (loginPayload: ILoginType, res: Response) => {
   try {
     const r = requestValidator(loginSchema, loginPayload, res);

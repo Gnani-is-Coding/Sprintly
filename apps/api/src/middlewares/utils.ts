@@ -1,5 +1,15 @@
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import type { Request, Response } from "express";
+
+const PRIVATEKEY = process.env.PRIVATE_KEY!;
+
+export const extractPayloadFromCookies = (
+  cookie: string,
+): string | JwtPayload => {
+  const payload = jwt.verify(cookie, PRIVATEKEY);
+
+  return payload;
+};
 
 // Extracts-out user Payload and sets in REQ-body.
 export const verifyTokensAndExtractPayload = (
@@ -21,11 +31,8 @@ export const verifyTokensAndExtractPayload = (
       if (!accessToken) return forbiddenResponse();
     }
 
-    const PRIVATEKEY = process.env.PRIVATE_KEY!;
-
-    const payload = jwt.verify(
+    const payload = extractPayloadFromCookies(
       isRotationFlow ? refreshToken : accessToken,
-      PRIVATEKEY,
     );
 
     console.log(payload, "payload");

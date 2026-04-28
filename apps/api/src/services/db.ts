@@ -12,9 +12,11 @@ class DB {
     {
       email: "Gnani@gmail.com",
       password:
-        "$argon2id$v=19$m=65536,t=2,p=1$hXiFqxHd4rcw6BB5YjnFUdCJvID9xRPmU5TFQvoXUms$pCMxrucchaX498kn3frOiX2zSwTFzGUFEDgC2REnKsM",
+        "$argon2id$v=19$m=65536,t=2,p=1$mLhz35UcRludbgscUfRSWTCR3Z3t5N+/d+gCwf0lz9c$Hw1KWqJ8BqfZltQKx1taXgYg7MRFoxawRV5Ry+M1ilc",
       name: "Gnanendra Gariminti",
-      refreshToken: "Testing",
+      refreshToken:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkduYW5pQGdtYWlsLmNvbSIsImlhdCI6MTc3NzM0Mjk4MywiZXhwIjoxNzc3OTQ3NzgzfQ.Euf_17Dn-b4E117M2vqQeQytbGsqXQHylqyfvQzq_PE",
+      // pass: testing123
     },
   ];
 

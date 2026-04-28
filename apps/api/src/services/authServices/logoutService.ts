@@ -2,6 +2,8 @@ import type { Request, Response } from "express";
 import { handleCatchBlockError } from "../../utils";
 
 export const logoutService = (req: Request, res: Response) => {
+  // #TODO: add logout from all Devices support as well in here.
+
   try {
     console.log(req.cookies, "Cookies from REQ");
     const { refreshToken, accessToken } = req.cookies;

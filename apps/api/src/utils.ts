@@ -33,7 +33,10 @@ export const requestValidator = <G extends z.ZodTypeAny>( // Means whatever zod-
     return { status: true, value: value };
   } catch (err) {
     if (err instanceof ZodError) {
-      res.status(400).send({ data: `${z.treeifyError(err)}` });
+      console.log("Instance of Zod Error in here ...", {
+        data: z.treeifyError(err),
+      });
+      res.status(400).send({ data: z.treeifyError(err) });
     } else {
       res.status(500).send({ data: "Error occured" });
     }

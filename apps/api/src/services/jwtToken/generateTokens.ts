@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import type { TokenPayload } from "@sprintly/shared/schemas";
 
 export enum TOKENS {
   ACCESS = "ACCESS",
@@ -10,10 +11,7 @@ export type tokenType = keyof typeof TOKENS;
 
 const PRIVATEKEY = process.env.PRIVATE_KEY || "Testing";
 
-const handleGenToken = (
-  payload: Record<string, unknown>,
-  expiryTime: number,
-) => {
+const handleGenToken = (payload: TokenPayload, expiryTime: number) => {
   // #TODO: add more user details n type in here.
   return jwt.sign(payload, PRIVATEKEY, { expiresIn: expiryTime });
 };
@@ -25,10 +23,7 @@ export const expiryTimeEnum = {
   [TOKENS.ACCESS]: 15 * 60, // 15 mins session.
 };
 
-export const generateToken = (
-  type: tokenType,
-  payload: Record<string, unknown>,
-) => {
+export const generateToken = (type: tokenType, payload: TokenPayload) => {
   switch (type) {
     case TOKENS.ACCESS:
       return {
