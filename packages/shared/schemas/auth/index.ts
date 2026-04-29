@@ -16,7 +16,7 @@ When a user submits a form or an API sends back data, Zod physically stops that 
 
 export const loginSchema = z.object({
   email: z.email("Invalid Email Address"),
-  password: z.string().min(8, "Password must be of min 8 characters"),
+  password: z.string().min(8, "Password must be of min 8 characters"), // #TODO: enhacne this little more.
 });
 
 export const registerSchema = loginSchema.extend({

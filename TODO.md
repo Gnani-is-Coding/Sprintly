@@ -12,22 +12,22 @@
 - [x] `POST /auth/logout` — clear refresh token cookie, invalidate refresh token in DB
 - [ ] `GET /auth/me` — return current user profile from access token (for page refresh hydration)
 - [x] Auth middleware — verify access token on protected routes, attach `req.user`
-- [ ] Refresh token storage in DB (so tokens can be revoked per-user or per-session)
+- [x] Refresh token storage in DB (so tokens can be revoked per-user or per-session)
 - [x] Refresh token rotation — issue new refresh token on each refresh, invalidate the old one
 
 ### Security
 
-- [ ] CSRF protection on `/auth/refresh` endpoint (custom header validation or double-submit cookie)
-- [ ] Cookie config: `httpOnly`, `Secure`, `SameSite=Strict`, proper `Path` and `maxAge`
-- [ ] Rate limiting on `/auth/login` and `/auth/register` (e.g., express-rate-limit — prevent brute force)
+- [x] CSRF protection on `/auth/refresh` endpoint (custom header validation or double-submit cookie)
+- [x] Cookie config: `httpOnly`, `Secure`, `SameSite=Strict`, proper `Path` and `maxAge`
+- [x] Rate limiting on `/auth/login` and `/auth/register` (e.g., express-rate-limit — prevent brute force)
 - [ ] Password complexity validation (min length, etc.) via Zod schema in `@sprintly/shared`
-- [ ] Helmet.js for security headers
-- [ ] CORS config — whitelist frontend origin only
+- [x] Helmet.js for security headers
+- [x] CORS config — whitelist frontend origin only
 
 ### Shared Package (`@sprintly/shared`)
 
-- [ ] Zod schemas: `loginSchema`, `registerSchema` (email, password validation) — shared between frontend + backend
-- [ ] Shared TypeScript types: `User`, `AuthResponse`, `TokenPayload`
+- [x] Zod schemas: `loginSchema`, `registerSchema` (email, password validation) — shared between frontend + backend
+- [x] Shared TypeScript types: `User`, `AuthResponse`, `TokenPayload`
 - [ ] API error response types (consistent error shape across all endpoints)
 
 ### CRUD (after auth is solid)

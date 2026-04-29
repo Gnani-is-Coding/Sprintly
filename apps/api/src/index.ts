@@ -50,5 +50,6 @@ app.listen(BACKEND_PORT, () => {
 
 export default app;
 
-// #TODO: Re-structure the architecture of this project,
-// Rotes -> controller (req, res) -> service ->( returns data) -> controller (sends Response).
+// #TODO: Re-structure the architecture of this project, - DB
+// Rotes -> controller (req, res) -> service ->( returns data) -> controller (sends Response). - Pass
+//.+$fw9trNm*DW%R

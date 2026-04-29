@@ -46,8 +46,7 @@ export const requestValidator = <G extends z.ZodTypeAny>( // Means whatever zod-
 
 // Access token cookie with path: "/" — the browser sends it on every request to your backend (/users, /auth/anything, /projects, etc.).
 // This makes sense because every protected endpoint needs the access token.
-// Refresh token cookie with path: "/auth/refresh" — the browser only sends it when hitting /auth/refresh. A request to /users or
-// /projects won't carry the refresh token.
+// Refresh token cookie with path: "/auth/refresh" — the browser only sends it when hitting /auth/refresh.
 
 const cookieOptions = (type: Exclude<tokenType, "ALL">): CookieOptions => {
   const isRefreshtoken = type === TOKENS.REFRESH;
@@ -56,7 +55,7 @@ const cookieOptions = (type: Exclude<tokenType, "ALL">): CookieOptions => {
   return {
     httpOnly: isCSRFToken ? false : !!process.env.HTTP_ONLY,
     secure: !!process.env.SECURE,
-    sameSite: (process.env.SAME_SITE as CookieOptions["sameSite"]) || "none",
+    sameSite: (process.env.SAME_SITE as CookieOptions["sameSite"]) || "none", // dictates whether they are sent with cross-site requests
     maxAge: expiryTimeEnum[type] * 1000, // in millis
     path: isRefreshtoken ? "/v1/auth/refresh" : "/", // path controls which routes the browser attaches the cookie to.
   };
