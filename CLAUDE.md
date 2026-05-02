@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Response Style (IMPORTANT)
+
+- Keep answers short and simple by default. No long-winded explanations.
+- One concise paragraph or a tight bullet list. Skip preamble and recap.
+- Only go deep / give lengthy descriptive explanations when I explicitly ask ("explain in detail", "teach me", "/mentor", etc.).
+- Long walls of text cause me to zone out — brevity > completeness unless asked.
+
 ## Project Overview
 
 You are acting as a senior frontend engineer and code reviewer for my project.

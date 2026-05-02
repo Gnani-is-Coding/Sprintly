@@ -1,5 +1,44 @@
 # Sprintly — Phase Plan
 
+---
+
+## Backend:
+
+### Auth System
+
+- [x] `POST /auth/register` — validate input (Zod), check duplicate email, hash password (bcrypt/bun), create user, return access token + set refresh token cookie
+- [x] `POST /auth/login` — validate input (Zod), lookup user, compare password hash, return access token + set refresh token cookie
+- [x] `POST /auth/refresh` — validate refresh token from httpOnly cookie, issue new access token (+ rotate refresh token)
+- [x] `POST /auth/logout` — clear refresh token cookie, invalidate refresh token in DB
+- [ ] `GET /auth/me` — return current user profile from access token (for page refresh hydration)
+- [x] Auth middleware — verify access token on protected routes, attach `req.user`
+- [x] Refresh token storage in DB (so tokens can be revoked per-user or per-session)
+- [x] Refresh token rotation — issue new refresh token on each refresh, invalidate the old one
+
+### Security
+
+- [x] CSRF protection on `/auth/refresh` endpoint (custom header validation or double-submit cookie)
+- [x] Cookie config: `httpOnly`, `Secure`, `SameSite=Strict`, proper `Path` and `maxAge`
+- [x] Rate limiting on `/auth/login` and `/auth/register` (e.g., express-rate-limit — prevent brute force)
+- [ ] Password complexity validation (min length, etc.) via Zod schema in `@sprintly/shared`
+- [x] Helmet.js for security headers
+- [x] CORS config — whitelist frontend origin only
+
+### Shared Package (`@sprintly/shared`)
+
+- [x] Zod schemas: `loginSchema`, `registerSchema` (email, password validation) — shared between frontend + backend
+- [x] Shared TypeScript types: `User`, `AuthResponse`, `TokenPayload`
+- [ ] API error response types (consistent error shape across all endpoints)
+
+### CRUD (after auth is solid)
+
+- [ ] Projects CRUD endpoints
+- [ ] Boards CRUD endpoints
+- [ ] Columns CRUD endpoints
+- [ ] Cards CRUD endpoints
+
+---
+
 ## Frontend:
 
 ## Phase 1 — MVP (Core Kanban)
@@ -64,3 +103,5 @@
 - [ ] User specific-Permissions (viewer/editor)
 - [ ] Performance optimizations
 - [ ] Testing cases as well using a Testing frameWorks.
+
+- [ ] Init Logging setup as well.

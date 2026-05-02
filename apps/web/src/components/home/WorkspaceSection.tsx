@@ -1,10 +1,4 @@
-import {
-  LayoutGrid,
-  Users,
-  Settings,
-  Crown,
-  ChevronDown,
-} from "lucide-react";
+import { LayoutGrid, Users, Settings, Crown, ChevronDown } from "lucide-react";
 import BoardCard from "./BoardCard";
 import CreateBoardCard from "./CreateBoardCard";
 
@@ -17,7 +11,11 @@ const actionButtons = [
 
 const workspaceBoards = [
   { id: 1, title: "Demo Board", bgColor: "#c77dba" },
-  { id: 2, title: "Testing", bgColor: "linear-gradient(135deg, #1a56db, #3b82f6)" },
+  {
+    id: 2,
+    title: "Testing",
+    bgColor: "linear-gradient(135deg, #1a56db, #3b82f6)",
+  },
 ];
 
 function WorkspaceSection() {
@@ -31,7 +29,8 @@ function WorkspaceSection() {
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
             G
-          </div> {/* #TODO: add a real icon/avatar in here */}
+          </div>{" "}
+          {/* #TODO: add a real icon/avatar in here */}
           <h4 className="text-base font-semibold text-gray-200 truncate">
             GNANENDRA GARIMINTI's workspace
           </h4>
