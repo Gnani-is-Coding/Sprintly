@@ -6,6 +6,9 @@ import authorise from "./middlewares/authorise";
 import cors, { type CorsOptions } from "cors";
 import { limiter } from "./middlewares/rateLimiter/globalLimiter";
 import helmet from "helmet";
+import { loadEnvironment } from "../env";
+
+loadEnvironment();
 
 const app = express();
 const BACKEND_PORT = process.env.BACKEND_PORT || 8080;
