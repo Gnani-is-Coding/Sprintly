@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "@sprintly/shared": "workspace:*",
     "@types/express": "^5.0.6",
     "cookie-parser": "^1.4.7",

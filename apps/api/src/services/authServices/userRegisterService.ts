@@ -1,5 +1,4 @@
 import { password } from "bun";
-import DB from "../db";
 import type { Response } from "express";
 import {
   CookieHelper,
@@ -8,6 +7,8 @@ import {
 } from "../../utils";
 import { generateToken } from "../jwtToken/generateTokens";
 import { registerSchema } from "@sprintly/shared/schemas";
+import { prisma } from "../../lib/prisma";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 const userRegisterService = async (useDetails: unknown, res: Response) => {
   try {
@@ -17,55 +18,48 @@ const userRegisterService = async (useDetails: unknown, res: Response) => {
 
     const { value: structuredUserDetails } = r;
 
-    const { password: inputPasswrd, email } = structuredUserDetails;
-    const storedUser = DB.get(email); // make sure our "emails" are unique.
+    const hashedPassword = await password.hash(structuredUserDetails.password);
+    let createUserResponse = null;
 
-    if (storedUser) {
-      return res
-        .status(400)
-        .send({ data: "User already Exists, please Login" });
+    try {
+      const dbResponse = await prisma.user.create({
+        data: { ...structuredUserDetails, password: hashedPassword },
+        select: { id: true, name: true, email: true },
+      });
+      createUserResponse = dbResponse;
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError && e.code === "P2002")
+        return res.status(409).send({ data: "User already exists" }); // relying on DB error, instead of making a lookup.
+      throw e;
     }
 
-    const hashedPassword = await password.hash(inputPasswrd);
+    // deep copy
+    // JSON.parse(JSON.stringify(structuredUserDetails))
+    // inbuilt-method structuredClone(structuredUserDetails);
 
-    const response = DB.set({
-      ...structuredUserDetails,
-      password: hashedPassword,
+    const { accessToken, refreshToken, csrfToken } = generateToken("ALL", {
+      email: structuredUserDetails!.email,
     });
-    console.log("Saved in DB");
-    console.log(hashedPassword, "hashedPassword");
 
-    if (response.status) {
-      // deep copy
-      // JSON.parse(JSON.stringify(structuredUserDetails))
-      // inbuilt-method structuredClone(structuredUserDetails);
+    //But this is lossy:
+    // Because JSON (the format) only supports strings, numbers, booleans, arrays, objects, and null. Anything else gets mangled or
+    // dropped during the stringify step:
 
-      const { accessToken, refreshToken, csrfToken } = generateToken("ALL", {
-        email: structuredUserDetails!.email,
-      });
+    // - undefined → silently dropped
+    // - Date objects → become strings ("2026-03-01T...") and stay strings after parse
+    // - Map, Set → become {}
+    // - Functions → dropped entirely
+    // - NaN, Infinity → become null
 
-      //But this is lossy:
-      // Because JSON (the format) only supports strings, numbers, booleans, arrays, objects, and null. Anything else gets mangled or
-      // dropped during the stringify step:
+    // structuredClone does the same deep-clone job but uses a proper cloning algorithm internally (no string middleman), so it handles
+    // Date, Map, Set, ArrayBuffer, etc. correctly.
 
-      // - undefined → silently dropped
-      // - Date objects → become strings ("2026-03-01T...") and stay strings after parse
-      // - Map, Set → become {}
-      // - Functions → dropped entirely
-      // - NaN, Infinity → become null
+    CookieHelper(res, refreshToken, accessToken, csrfToken);
 
-      // structuredClone does the same deep-clone job but uses a proper cloning algorithm internally (no string middleman), so it handles
-      // Date, Map, Set, ArrayBuffer, etc. correctly.
-
-      CookieHelper(res, refreshToken, accessToken, csrfToken);
-      const responseDetails = JSON.parse(JSON.stringify(structuredUserDetails)); // serialization and deserialization
-      delete responseDetails.password;
-
-      res.send({
-        data: responseDetails,
-        status: "Successfully Done !!",
-      });
-    }
+    res.send({
+      data: createUserResponse,
+      status: "Successfully Done !!",
+    });
   } catch (err: unknown) {
     handleCatchBlockError(err, res, "UserRegistration-Service");
   }

@@ -10,7 +10,7 @@
 - [x] `POST /auth/login` — validate input (Zod), lookup user, compare password hash, return access token + set refresh token cookie
 - [x] `POST /auth/refresh` — validate refresh token from httpOnly cookie, issue new access token (+ rotate refresh token)
 - [x] `POST /auth/logout` — clear refresh token cookie, invalidate refresh token in DB
-- [ ] `GET /auth/me` — return current user profile from access token (for page refresh hydration)
+- [x] `GET /auth/me` — return current user profile from access token (for page refresh hydration)
 - [x] Auth middleware — verify access token on protected routes, attach `req.user`
 - [x] Refresh token storage in DB (so tokens can be revoked per-user or per-session)
 - [x] Refresh token rotation — issue new refresh token on each refresh, invalidate the old one
