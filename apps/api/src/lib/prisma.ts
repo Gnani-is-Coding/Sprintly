@@ -6,7 +6,7 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-const connectionString = `${process.env.DATABASE_URL}`;
+const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
   throw new Error(
     "Error DataSource url is not Set - Did you run loadEnvironment() ?",

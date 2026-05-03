@@ -2,7 +2,6 @@ import express from "express";
 import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
 import cookieParser from "cookie-parser";
-import authorise from "./middlewares/authorise";
 import cors, { type CorsOptions } from "cors";
 import { limiter } from "./middlewares/rateLimiter/globalLimiter";
 import helmet from "helmet";
@@ -41,7 +40,7 @@ app.use(limiter);
 
 //routes
 app.use("/v1/auth", authRouter);
-app.use("/v1/users", authorise, userRouter);
+app.use("/v1/users", userRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello Gnani here !!");

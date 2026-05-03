@@ -1,16 +1,28 @@
 import { Router } from "express";
-import DB from "../../services/db";
+import { prisma } from "../../lib/prisma";
+import authorise from "../../middlewares/authorise";
 
 const userRouter = Router();
 
-userRouter.get("/", (_, res) => {
-  const allUsersInDb = DB.getAllItems();
+const sensitiveFields = {
+  refreshToken: true,
+  password: true,
+};
+
+userRouter.get("/", authorise, async (_, res) => {
+  const allUsersInDb = await prisma.user.findMany({
+    omit: sensitiveFields,
+  });
 
   res.send({ data: allUsersInDb });
 });
 
-userRouter.post("/me", (req, res) => {
-  const userDetails = DB.get(req.body.email);
+userRouter.get("/me", authorise, async (req, res) => {
+  const userDetails = await prisma.user.findUnique({
+    where: { email: req.body?.email },
+    omit: sensitiveFields,
+  });
+
   if (userDetails) {
     res.send({ data: userDetails });
   } else {

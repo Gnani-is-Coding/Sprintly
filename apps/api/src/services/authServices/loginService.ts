@@ -4,10 +4,10 @@ import {
   handleCatchBlockError,
   requestValidator,
 } from "../../utils";
-import DB from "../db";
 import { password } from "bun";
 import { generateToken } from "../jwtToken/generateTokens";
-import { loginSchema, registerSchema } from "@sprintly/shared/schemas";
+import { loginSchema } from "@sprintly/shared/schemas";
+import { prisma } from "../../lib/prisma";
 
 type ILoginType = {
   email: string;
@@ -16,33 +16,28 @@ type ILoginType = {
 
 export const loginservice = async (loginPayload: ILoginType, res: Response) => {
   try {
-    const r = requestValidator(loginSchema, loginPayload, res);
+    const structuredPayload = requestValidator(loginSchema, loginPayload, res);
 
-    if (!r.status) return;
+    if (!structuredPayload.status) return;
 
-    const { value: structuredPayload } = r;
-    const dbResponse = DB.get(structuredPayload!.email);
+    const DBUserDetails = await prisma.user.findUnique({
+      where: { email: structuredPayload.value.email },
+    });
+    console.log(DBUserDetails, "dbUserdetails");
 
-    const dbResponseValidationObj = requestValidator(
-      registerSchema,
-      dbResponse,
-      res,
-    );
+    if (!DBUserDetails) {
+      return res.status(404).send({ data: "User Doesnt exist !" });
+    }
 
-    if (!dbResponseValidationObj.status) return;
-
-    const { value: dbResponsestructured } = dbResponseValidationObj;
-
-    console.log("Before check ");
     // comparing password
     const isPsswdMatch = await password.verify(
-      loginPayload.password,
-      dbResponsestructured!.password, // null assertion cause we know that this cant be undefined, cause of the guard at line 21.
+      structuredPayload.value.password,
+      DBUserDetails.password,
     );
 
     if (isPsswdMatch) {
       const { refreshToken, accessToken, csrfToken } = generateToken("ALL", {
-        email: dbResponsestructured!.email,
+        email: structuredPayload.value.email,
       });
 
       console.log(
@@ -51,7 +46,10 @@ export const loginservice = async (loginPayload: ILoginType, res: Response) => {
       );
 
       // Store in DB n set in cookies.
-      DB.put({ ...dbResponsestructured!, refreshToken: refreshToken });
+      await prisma.user.update({
+        where: { email: structuredPayload.value.email },
+        data: { refreshToken },
+      });
       CookieHelper(res, refreshToken, accessToken, csrfToken);
 
       res.send({ data: "Successfully Logged in !" });

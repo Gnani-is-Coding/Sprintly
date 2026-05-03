@@ -2,20 +2,37 @@ import type { Request, Response } from "express";
 import { CookieHelper } from "../../utils";
 import { generateToken } from "../jwtToken/generateTokens";
 import { extractPayloadFromCookies } from "../../middlewares/utils";
-import DB from "../db";
 import type { TokenPayload } from "@sprintly/shared/schemas";
+import { prisma } from "../../lib/prisma";
 
-const tokenRotationService = (req: Request, res: Response) => {
+const tokenRotationService = async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies;
 
   const payload = extractPayloadFromCookies(refreshToken) as TokenPayload;
   const { email } = payload;
 
-  const existingUserDetails = DB.get(email);
+  const existingUserDetails = await prisma.user.findUnique({
+    where: { email },
+  });
 
   if (!existingUserDetails) {
     console.log("VULNERABILITY DETECTED, COOKIE got conpromised !!!!");
-    return res.status(400).send({ data: "Not an Existing User, Register !" });
+    return res
+      .status(401)
+      .send({ data: "Not an Existing User, Register or Login Again !" }); // can be 403 as well.
+  }
+
+  const isRefreshTokenMatching =
+    existingUserDetails.refreshToken === refreshToken;
+
+  if (!isRefreshTokenMatching) {
+    await prisma.user.update({
+      where: { email },
+      data: { refreshToken: null }, // null-out the refresh token, it comprimised.
+    });
+    return res
+      .status(401)
+      .send({ data: "User Unauthorised, Login In Again !" });
   }
 
   const {
@@ -24,12 +41,10 @@ const tokenRotationService = (req: Request, res: Response) => {
     csrfToken,
   } = generateToken("ALL", existingUserDetails);
 
-  const updatedPayload = {
-    ...structuredClone(existingUserDetails),
-    refreshToken: newRefreshToken,
-  };
-
-  DB.put(updatedPayload); // Update in DB as well.
+  await prisma.user.update({
+    where: { email },
+    data: { refreshToken: newRefreshToken },
+  });
 
   // set tokens in Cookies.
   const { success } = CookieHelper(
