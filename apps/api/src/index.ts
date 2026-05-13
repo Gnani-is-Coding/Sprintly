@@ -6,6 +6,7 @@ import cors, { type CorsOptions } from "cors";
 import { limiter } from "./middlewares/rateLimiter/globalLimiter";
 import helmet from "helmet";
 import { loadEnvironment } from "../env";
+import boardsRouter from "./routes/boards";
 
 loadEnvironment();
 
@@ -41,6 +42,7 @@ app.use(limiter);
 //routes
 app.use("/v1/auth", authRouter);
 app.use("/v1/users", userRouter);
+app.use("/v1/boards", boardsRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello Gnani here !!");

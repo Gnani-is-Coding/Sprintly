@@ -1,6 +1,22 @@
 // Prisma schema — single source of truth for the DB.
 // Docs: https://pris.ly/d/prisma-schema
 
+
+// If we had to add a new Table in our DB, add that Entity modal in here and then
+
+
+// bunx prisma migrate dev --name Migration_name - for Dev deloy.
+// bunx prisma migrate deploy - for production deploy.
+
+// To revert a Migration;
+// bunx prisma migrate reset - For Dev.
+// Remove Schema changes - then push this as a new migration. - For Prod.
+
+
+
+// ----------------- **** ---------------------
+
+
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,6 +26,7 @@ datasource db {
   provider = "postgresql"
 }
 
+
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -18,4 +35,13 @@ model User {
   refreshToken String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model Board {
+  id  String  @id @default(cuid())
+  title String
+  bgColor String 
+  isATemplate Boolean
+  createdAt DateTime
+  updatedAt DateTime
 }
