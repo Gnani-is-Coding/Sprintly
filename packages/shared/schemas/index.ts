@@ -1,6 +1,7 @@
-export { loginSchema, registerSchema, tokenPayload } from "./auth";
-export { userProfileSchema } from "./auth/api";
+export { loginSchema, registerSchema, tokenPayload } from "./authAndUser";
+export { userProfileSchema } from "./authAndUser/api";
+export { boardSchema } from "./boards";
 
 // Types
-export type { LoginInput, RegisterInput, TokenPayload } from "./auth";
-export type { UserProfile } from "./auth/api";
+export type { LoginInput, RegisterInput, TokenPayload } from "./authAndUser";
+export type { UserProfile } from "./authAndUser/api";
