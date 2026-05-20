@@ -7,10 +7,13 @@
 
 // bunx prisma migrate dev --name Migration_name - for Dev deloy.
 // bunx prisma migrate deploy - for production deploy.
+// bunx prisma generate -  to generate client with the lateste schema changes.
 
 // To revert a Migration;
 // bunx prisma migrate reset - For Dev.
 // Remove Schema changes - then push this as a new migration. - For Prod.
+
+// bunx prisma validate - to validate the schema.
 
 
 
@@ -26,6 +29,12 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role { 
+  OWNER 
+  ADMIN 
+  EDITOR 
+  VIEWER 
+}
 
 model User {
   id           String   @id @default(cuid())
@@ -33,15 +42,44 @@ model User {
   name         String
   password     String
   refreshToken String?
+  boardMemberships BoardMember[]
+
+  deletedAt    DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  ownedBoards  Board[]   
 }
 
 model Board {
   id  String  @id @default(cuid())
   title String
   bgColor String 
-  isATemplate Boolean
-  createdAt DateTime
-  updatedAt DateTime
+  isATemplate Boolean @default(false)
+
+  authorId String
+  author  User @relation(fields: [authorId], references:[id])
+  members BoardMember[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime? 
+
+  @@index([authorId])
+}
+
+model BoardMember {
+  id String @id @default(cuid())
+  userId String
+  boardId String
+  role  Role
+  joinedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  board Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, boardId])
+  @@index([boardId])
+
+
 }

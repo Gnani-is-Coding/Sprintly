@@ -1,6 +1,6 @@
 export { loginSchema, registerSchema, tokenPayload } from "./authAndUser";
 export { userProfileSchema } from "./authAndUser/api";
-export { boardSchema } from "./boards";
+export { boardSchema, boardCreateSchema, boardUpdateSchema } from "./boards";
 
 // Types
 export type { LoginInput, RegisterInput, TokenPayload } from "./authAndUser";

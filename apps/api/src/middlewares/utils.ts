@@ -35,7 +35,9 @@ export const verifyTokensAndExtractPayload = (
       isRotationFlow ? refreshToken : accessToken,
     );
 
-    console.log(payload, "payload");
+    console.log(
+      "TOKENS VERIFICATION DONE:: from verifyTokensAndExtractPayload",
+    );
 
     // @ts-expect-error #TODO: enhance this, with more User details in here.
     const userDetails = { email: payload.email };
