@@ -82,4 +82,22 @@ boardsRouter.patch("/:id", async (req, res) => {
     boardData,
   );
 });
+
+// delete a board
+boardsRouter.delete("/:id", async (req, res) => {
+  const { id } = req.query;
+  if (!id)
+    return commonApiResponseBuilder(400, res, "BoardID is required Bruvhhh !!");
+
+  await prisma.board.update({
+    where: { id },
+    data: { deletedAt: new Date() },
+  });
+
+  return commonApiResponseBuilder(
+    200,
+    res,
+    "deleted board ${id} succefullly !",
+  );
+});
 export default boardsRouter;

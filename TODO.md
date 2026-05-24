@@ -32,9 +32,9 @@
 
 ### CRUD (after auth is solid)
 
-- [ ] Boards CRUD endpoints
-- [ ] Columns CRUD endpoints
-- [ ] Cards CRUD endpoints
+- [x] Boards CRUD endpoints
+- [x] Columns CRUD endpoints
+- [x] Cards CRUD endpoints
 
 ---
 

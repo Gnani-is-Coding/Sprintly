@@ -7,6 +7,8 @@ import { limiter } from "./middlewares/rateLimiter/globalLimiter";
 import helmet from "helmet";
 import { loadEnvironment } from "../env";
 import boardsRouter from "./routes/boards";
+import columnRouter from "./routes/column";
+import cardRouter from "./routes/cards";
 
 loadEnvironment();
 
@@ -43,6 +45,8 @@ app.use(limiter);
 app.use("/v1/auth", authRouter);
 app.use("/v1/users", userRouter);
 app.use("/v1/boards", boardsRouter);
+app.use("/v1/columns", columnRouter);
+app.use("/v1/cards", cardRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello Gnani here !!");

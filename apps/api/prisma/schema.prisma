@@ -1,24 +1,21 @@
 // Prisma schema — single source of truth for the DB.
 // Docs: https://pris.ly/d/prisma-schema
 
-
 // If we had to add a new Table in our DB, add that Entity modal in here and then
-
 
 // bunx prisma migrate dev --name Migration_name - for Dev deloy.
 // bunx prisma migrate deploy - for production deploy.
-// bunx prisma generate -  to generate client with the lateste schema changes.
+// bunx prisma generate -  to generate client with the latest schema changes.
 
 // To revert a Migration;
 // bunx prisma migrate reset - For Dev.
 // Remove Schema changes - then push this as a new migration. - For Prod.
 
+// ****** DEV ****
 // bunx prisma validate - to validate the schema.
-
-
+// bunx prisma format - to prettiefy the schema.
 
 // ----------------- **** ---------------------
-
 
 generator client {
   provider = "prisma-client"
@@ -29,57 +26,109 @@ datasource db {
   provider = "postgresql"
 }
 
-enum Role { 
-  OWNER 
-  ADMIN 
-  EDITOR 
-  VIEWER 
+enum Role {
+  OWNER
+  ADMIN
+  EDITOR
+  VIEWER
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String
-  password     String
-  refreshToken String?
+  id               String        @id @default(cuid())
+  email            String        @unique
+  name             String
+  password         String
+  refreshToken     String?
   boardMemberships BoardMember[]
 
-  deletedAt    DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  ownedBoards  Board[]   
+  ownedBoards Board[]
+  comments    Comment[]
 }
 
+// =========== *** Boards *** ==================== //
 model Board {
-  id  String  @id @default(cuid())
-  title String
-  bgColor String 
+  id          String  @id @default(cuid())
+  title       String
+  bgColor     String? @default("#1D2125")
   isATemplate Boolean @default(false)
 
-  authorId String
-  author  User @relation(fields: [authorId], references:[id])
-  members BoardMember[]
+  authorId String? // this will be null, only in case of User is deleted.
+  author   User?         @relation(fields: [authorId], references: [id], onDelete: SetNull) // when author is deleted, then we can have a trigger that transfers the ownership.
+  members  BoardMember[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime? 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  columns   Columns[]
 
   @@index([authorId])
 }
 
 model BoardMember {
-  id String @id @default(cuid())
-  userId String
-  boardId String
-  role  Role
+  id       String   @id @default(cuid())
+  userId   String
+  boardId  String
+  role     Role
   joinedAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   board Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
 
   @@unique([userId, boardId])
   @@index([boardId])
+}
 
+// =========== *** Columns *** ==================== //
 
+model Columns {
+  id      String  @id @default(cuid())
+  title   String
+  bgColor String? @default("#101204")
+  order   Int
+  boardId String
+  cards   Card[]
+
+  board Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+// =========== *** Cards *** ==================== //
+
+model Card {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  bgImage     String?
+  tags        Json      @default("[]")
+  comments    Comment[]
+  order       Int
+  columnId    String
+
+  column Columns @relation(fields: [columnId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  description String
+  cardId      String
+  authorId    String?
+  reactions   String[]
+
+  card   Card  @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull) // when the author is deleted, then we have the author as 'deleted-user'.
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }
