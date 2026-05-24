@@ -11,12 +11,7 @@ const boardsRouter = Router();
 boardsRouter.get("/", authorise, async (req, res) => {
   const { id } = req.body;
 
-  if (!id)
-    return commonApiResponseBuilder(
-      400,
-      res,
-      "User Id and Email is required !!",
-    );
+  if (!id) return commonApiResponseBuilder(400, res, "User Id is required !!");
 
   const userCreatedBoards = await prisma.board.findMany({
     where: {
@@ -31,11 +26,11 @@ boardsRouter.get("/", authorise, async (req, res) => {
 });
 
 // read by ID.
-boardsRouter.get("/:id", (req, res) => {
+boardsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   if (!id) return commonApiResponseBuilder(400, res, "Board Id is required !!");
 
-  const boardDetails = prisma.board.findUnique({
+  const boardDetails = await prisma.board.findUnique({
     where: { id },
   });
 
