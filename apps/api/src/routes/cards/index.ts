@@ -44,20 +44,28 @@ cardRouter.get("/:id", authorise, async (req, res) => {
   }
 });
 
-// create a card — server computes `order` as max+1 in the target column
+// create a card — server computes `order` as max+1 in the target column.
+// "SELECT FOR UPDATE" on the parent Columns row, implements lock.
+// into the same column, so two POSTs can't compute the same `order`.
 cardRouter.post("/", authorise, async (req, res) => {
   try {
     const validatorRes = requestValidator(cardCreateSchema, req.body, res);
     if (!validatorRes.status) return;
 
-    const { _max } = await prisma.card.aggregate({
-      where: { columnId: validatorRes.value.columnId, deletedAt: null },
-      _max: { order: true },
-    });
-    const order = (_max.order ?? -1) + 1;
+    const { columnId } = validatorRes.value;
 
-    const card = await prisma.card.create({
-      data: { ...validatorRes.value, order },
+    const card = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT 1 FROM "Columns" WHERE id = ${columnId} FOR UPDATE`;
+
+      const { _max } = await tx.card.aggregate({
+        where: { columnId, deletedAt: null },
+        _max: { order: true },
+      });
+      const order = (_max.order ?? -1) + 1;
+
+      return tx.card.create({
+        data: { ...validatorRes.value, order },
+      });
     });
 
     return commonApiResponseBuilder(

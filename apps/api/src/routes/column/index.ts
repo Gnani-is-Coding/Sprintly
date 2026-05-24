@@ -46,20 +46,28 @@ columnRouter.get("/:id", authorise, async (req, res) => {
   }
 });
 
-// create a column — server computes `order` as max+1 in the target board
+// create a column — server computes `order` as max+1 in the target board.
+// SELECT FOR UPDATE on the parent Board row serializes concurrent inserts
+// into the same board, so two POSTs can't compute the same `order`.
 columnRouter.post("/", authorise, async (req, res) => {
   try {
     const validatorRes = requestValidator(columnsCreateSchema, req.body, res);
     if (!validatorRes.status) return;
 
-    const { _max } = await prisma.columns.aggregate({
-      where: { boardId: validatorRes.value.boardId, deletedAt: null },
-      _max: { order: true },
-    });
-    const order = (_max.order ?? -1) + 1;
+    const { boardId } = validatorRes.value;
 
-    const column = await prisma.columns.create({
-      data: { ...validatorRes.value, order },
+    const column = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT 1 FROM "Board" WHERE id = ${boardId} FOR UPDATE`;
+
+      const { _max } = await tx.columns.aggregate({
+        where: { boardId, deletedAt: null },
+        _max: { order: true },
+      });
+      const order = (_max.order ?? -1) + 1;
+
+      return tx.columns.create({
+        data: { ...validatorRes.value, order },
+      });
     });
 
     return commonApiResponseBuilder(
