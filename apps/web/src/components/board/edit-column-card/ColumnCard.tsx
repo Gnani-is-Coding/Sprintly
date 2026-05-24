@@ -1,5 +1,5 @@
 import { Circle, CircleCheck, MessageSquare, Pencil } from "lucide-react";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import CardModal from "./CardModal";
 
 interface CardData {
@@ -17,7 +17,7 @@ interface ColumnCardProps {
 function ColumnCard({ card }: ColumnCardProps) {
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleCheckboxClick = (e) => {
+  const handleCheckboxClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation(); // in order to prevent this click event Bubbling.
 
