@@ -6,7 +6,7 @@ function authorise(req: Request, res: Response, next: NextFunction) {
   try {
     const { success } = verifyTokensAndExtractPayload(req, res);
     // Check if the token is expired or active .
-    // Browsers wont attach the expired cookies by default.
+    // Browsers wont attach the expired cookies by default. but we cant rely totally on that.
 
     if (success) {
       next();

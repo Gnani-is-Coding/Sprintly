@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { userProfileSchema } from "../auth/api";
+import { userProfileSchema } from "../authAndUser/api";
 
 const apiResponse = <T extends z.ZodTypeAny>(data: T) =>
   z.object({

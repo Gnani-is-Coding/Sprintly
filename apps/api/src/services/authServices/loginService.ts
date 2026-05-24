@@ -26,7 +26,7 @@ export const loginservice = async (loginPayload: ILoginType, res: Response) => {
     console.log(DBUserDetails, "dbUserdetails");
 
     if (!DBUserDetails) {
-      return res.status(404).send({ data: "User Doesnt exist !" });
+      return res.status(401).send({ data: "User Doesnt exist !" });
     }
 
     // comparing password
@@ -63,3 +63,5 @@ export const loginservice = async (loginPayload: ILoginType, res: Response) => {
 
 // Takes care of Bussiness Logic in here.
 // Pure business logic. - no req, no res, no Express anywhere.
+
+// claude --resume 52a85a8b-f3d1-41a6-a69d-62f55de3411c

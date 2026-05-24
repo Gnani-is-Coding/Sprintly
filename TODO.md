@@ -32,10 +32,9 @@
 
 ### CRUD (after auth is solid)
 
-- [ ] Projects CRUD endpoints
-- [ ] Boards CRUD endpoints
-- [ ] Columns CRUD endpoints
-- [ ] Cards CRUD endpoints
+- [x] Boards CRUD endpoints
+- [x] Columns CRUD endpoints
+- [x] Cards CRUD endpoints
 
 ---
 
@@ -45,8 +44,8 @@
 
 - [x] Set up routing (Boards list, Board-Detail view)
 - [ ] Boards CRUD (create, list, delete)
-- [ ] Board-Column CRUD (create, rename, reorder, delete)
-- [ ] Column-Cards CRUD (create, edit, delete)
+- [ ] Board-Column CRUD (create, rename, reorder, delete) (Soft Delete in DB)
+- [ ] Column-Cards CRUD (create, edit, delete) (Soft delete in DB)
 - [x] Card detail modal design
 - [ ] Drag and drop Fuctionality
 - [ ] Redux slices:
@@ -59,7 +58,7 @@
 
 ## Phase 2 — Card Enrichment
 
-- [ ] Assignee 1:many for a at workspace level.
+- [ ] Assignee 1:many for a user at workspace level.
 - [ ] Labels (create, assign, color-coded)
 - [ ] Priority Tags (P0–P3)
 - [ ] Due dates + overdue indicators
@@ -68,6 +67,9 @@
 ## Phase 3 — Collaboration & Activity
 
 - [ ] Auth (real or simulated multi-user)
+- [ ] User level access control
+- [ ] `/admin` dashboard to control the access of the Users
+- [ ] Monitoring the Activity & Session management for users.
 - [ ] Comments on cards
 - [ ] Activity timeline per card
 - [ ] Reporter vs Assignee
